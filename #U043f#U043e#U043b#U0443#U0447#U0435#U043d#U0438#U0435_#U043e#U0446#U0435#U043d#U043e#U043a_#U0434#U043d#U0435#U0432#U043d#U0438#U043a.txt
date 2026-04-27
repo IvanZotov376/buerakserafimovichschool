@@ -1,0 +1,209 @@
+import asyncio
+import ssl
+import httpcore
+import tkinter as tk
+from tkinter import ttk
+from netschoolapi import NetSchoolAPI
+from datetime import datetime, timedelta
+import threading
+
+# ===== FIX DATE =====
+class FakeDate(str):
+    def isoformat(self):
+        return self + "T00:00:00"
+
+# ===== SSL FIX =====
+original_connect = httpcore._async.connection.AsyncHTTPConnection._connect
+
+async def patched_connect(self, request):
+    self._ssl_context = ssl.create_default_context()
+    self._ssl_context.check_hostname = False
+    self._ssl_context.verify_mode = ssl.CERT_NONE
+    return await original_connect(self, request)
+
+httpcore._async.connection.AsyncHTTPConnection._connect = patched_connect
+
+
+class App:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("NetSchool PRO FINAL")
+        self.root.geometry("1000x720")
+
+        self.week_offset = 0
+
+        frame = ttk.Frame(root)
+        frame.pack(fill="both", expand=True)
+
+        # ===== LOGIN =====
+        login_frame = ttk.Frame(frame)
+        login_frame.pack(fill="x")
+
+        self.login = ttk.Entry(login_frame)
+        self.login.pack(side="left", fill="x", expand=True)
+
+        self.password = ttk.Entry(login_frame, show="*")
+        self.password.pack(side="left", fill="x", expand=True)
+
+        ttk.Button(login_frame, text="Загрузить", command=self.start).pack(side="left")
+
+        # ===== NAV =====
+        nav = ttk.Frame(frame)
+        nav.pack()
+
+        ttk.Button(nav, text="??", command=self.prev_week).pack(side="left")
+        ttk.Button(nav, text="Сегодня", command=self.reset_week).pack(side="left")
+        ttk.Button(nav, text="??", command=self.next_week).pack(side="left")
+
+        # ===== OUTPUT =====
+        self.text = tk.Text(frame, bg="#020617", fg="#e2e8f0", font=("Consolas", 11))
+        self.text.pack(fill="both", expand=True)
+
+    # ===== UI =====
+    def log(self, t):
+        self.text.insert(tk.END, t)
+        self.text.see(tk.END)
+
+    def clear(self):
+        self.text.delete(1.0, tk.END)
+
+    def prev_week(self):
+        self.week_offset -= 1
+        self.start()
+
+    def next_week(self):
+        if self.week_offset < 2:  # ограничение
+            self.week_offset += 1
+        self.start()
+
+    def reset_week(self):
+        self.week_offset = 0
+        self.start()
+
+    def start(self):
+        threading.Thread(target=self.run, daemon=True).start()
+
+    def run(self):
+        asyncio.run(self.fetch())
+
+    # ===== УНИВЕРСАЛЬНЫЙ ПАРСЕР ОЦЕНОК =====
+    def extract_marks(self, obj):
+        marks = []
+
+        for field in ["marks", "grades", "results"]:
+            if hasattr(obj, field):
+                for m in getattr(obj, field) or []:
+                    val = getattr(m, "mark", None) \
+                          or getattr(m, "grade", None) \
+                          or getattr(m, "value", None) \
+                          or getattr(m, "score", None)
+                    if val:
+                        marks.append(str(val))
+
+        for field in ["mark", "grade", "value", "score"]:
+            if hasattr(obj, field):
+                val = getattr(obj, field)
+                if val:
+                    marks.append(str(val))
+
+        return marks
+
+    # ===== MAIN =====
+    async def fetch(self):
+        ns = NetSchoolAPI("https://sgo.volganet.ru/")
+        self.root.after(0, self.clear)
+
+        try:
+            await ns.login(self.login.get(), self.password.get(), "МКОУ школа №1 г.Серафимовича")
+
+            base = datetime.now() + timedelta(weeks=self.week_offset)
+
+            # защита от улёта в будущее
+            if base.year > datetime.now().year:
+                base = datetime.now()
+                self.week_offset = 0
+
+            start = base - timedelta(days=base.weekday())
+            end = start + timedelta(days=6)
+
+            self.log(f"Неделя: {start.date()} - {end.date()}\n")
+
+            diary = await ns.diary(
+                FakeDate(start.strftime("%Y-%m-%d")),
+                FakeDate(end.strftime("%Y-%m-%d"))
+            )
+
+            today = datetime.now().date()
+            tomorrow = today + timedelta(days=1)
+
+            schedule_list = list(diary.schedule)
+
+            for i in range(7):
+                date = start + timedelta(days=i)
+
+                label = str(date.date())
+                if date.date() == today:
+                    label += " ?? СЕГОДНЯ"
+                elif date.date() == tomorrow:
+                    label += " ?? ЗАВТРА"
+
+                self.log(f"\n?? {label}\n")
+
+                day = schedule_list[i] if i < len(schedule_list) else None
+
+                if not day:
+                    self.log("Нет данных\n")
+                    continue
+
+                lessons = getattr(day, "lessons", None)
+
+                if not lessons:
+                    self.log("Нет уроков\n")
+                    continue
+
+                for l in lessons:
+                    subject = getattr(l, "subject", "?")
+
+                    # ===== ОЦЕНКИ =====
+                    marks = []
+                    marks.extend(self.extract_marks(l))
+
+                    if hasattr(l, "assignments"):
+                        for a in l.assignments:
+                            marks.extend(self.extract_marks(a))
+
+                    marks = list(dict.fromkeys(marks))
+
+                    # ===== ДЗ =====
+                    hw = []
+                    if hasattr(l, "assignments"):
+                        for a in l.assignments:
+                            text = getattr(a, "content", None) or getattr(a, "text", None)
+                            if text:
+                                hw.append(text)
+
+                    line = f"• {subject}"
+
+                    if marks:
+                        line += f" | ?? {', '.join(marks)}"
+
+                    if hw:
+                        line += f" | ?? {'; '.join(hw)}"
+
+                    self.log(line + "\n")
+
+        except Exception as e:
+            self.log(f"\n? Ошибка: {e}\n")
+
+        finally:
+            await ns.logout()
+
+
+def main():
+    root = tk.Tk()
+    App(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

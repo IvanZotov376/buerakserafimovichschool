@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея</title>
+    <link rel="icon" type="image/png" href="logo1.png">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="footer.css">
+
+    <style>
+        /* ----- ХЕДЕР ----- */
+        .header {
+            background: linear-gradient(270deg, #2ea3d0, #3a5fa0, #2ea3d0);
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+            color: white;
+            padding: 20px 0;
+            transition: background 0.3s;
+        }
+
+        @keyframes gradientMove {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo img {
+            width: 80px;
+            transition: filter 0.3s;
+        }
+
+        .title {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .title h1 {
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .title p {
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: relative;
+        }
+
+        .user-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+
+        .user-block:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 800;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            line-height: 1.2;
+        }
+
+        .header-icons>i {
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .header-icons>i.active-icon {
+            color: #ffd966;
+        }
+
+        /* ----- ПАНЕЛЬ ДОСТУПНОСТИ ----- */
+        .accessibility-panel {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            padding: 30px;
+            z-index: 1000;
+            width: 480px;
+            margin-top: 10px;
+            color: #333;
+            font-family: 'Raleway', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .accessibility-panel.active {
+            display: block;
+        }
+
+        .accessibility-panel h4 {
+            margin-bottom: 10px;
+            font-weight: 800;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .option-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            padding: 6px 14px;
+            border: 2px solid #ccc;
+            background: #f8f8f8;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn.active {
+            background: #2ea3d0;
+            color: white;
+            border-color: #2ea3d0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 0.95rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.2s;
+        }
+
+        .close-panel:hover {
+            color: #000;
+        }
+
+        /* ----- НАВИГАЦИЯ ----- */
+        .nav {
+            margin-top: 25px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            list-style: none;
+        }
+
+        .menu li {
+            position: relative;
+        }
+
+        .menu>li>a {
+            text-decoration: none;
+            font-weight: 800;
+            color: black;
+            padding: 10px 15px;
+            display: block;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .menu>li>a:hover {
+            background: #2ea3d0;
+            color: white;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            min-width: 180px;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.25s ease;
+            z-index: 10;
+        }
+
+        .menu li:hover .dropdown {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown li {
+            list-style: none;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 12px 15px;
+            font-weight: 700;
+            color: black;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .dropdown a:hover {
+            background: #2ea3d0;
+            color: white;
+        }
+
+        /* ----- ОСНОВНОЙ КОНТЕНТ ----- */
+        .content {
+            padding: 40px 20px;
+            flex: 1;
+        }
+
+        /* ----- ТЕМЫ ----- */
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        body.dark-theme .header {
+            background: linear-gradient(270deg, #0f3b47, #1a2b5e, #0f3b47);
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+        }
+        body.dark-theme .nav {
+            background: #1e1e1e;
+        }
+        body.dark-theme .menu>li>a {
+            color: #e0e0e0;
+        }
+        body.dark-theme .menu>li>a:hover {
+            background: #3a506b;
+            color: white;
+        }
+        body.dark-theme .dropdown {
+            background: #2a2a2a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        body.dark-theme .dropdown a {
+            color: #e0e0e0;
+        }
+        body.dark-theme .dropdown a:hover {
+            background: #3a506b;
+            color: white;
+        }
+        body.dark-theme .accessibility-panel {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+        body.dark-theme .option-btn {
+            background: #3a3a3a;
+            border-color: #555;
+            color: #ccc;
+        }
+        body.dark-theme .option-btn.active {
+            background: #2ea3d0;
+            color: white;
+            border-color: #2ea3d0;
+        }
+        body.dark-theme .close-panel {
+            color: #aaa;
+        }
+        body.dark-theme .close-panel:hover {
+            color: white;
+        }
+
+        body.blue-theme {
+            background-color: #d4eafc;
+            color: #000;
+        }
+        body.blue-theme .header {
+            background: linear-gradient(270deg, #1e88e5, #1565c0, #1e88e5);
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+        }
+        body.blue-theme .nav {
+            background: #bbdefb;
+        }
+        body.blue-theme .menu>li>a {
+            color: #000;
+        }
+        body.blue-theme .menu>li>a:hover {
+            background: #1e88e5;
+            color: white;
+        }
+        body.blue-theme .dropdown {
+            background: #e3f2fd;
+        }
+        body.blue-theme .accessibility-panel {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+        body.blue-theme .option-btn {
+            background: #bbdefb;
+            border-color: #90caf9;
+            color: #0d47a1;
+        }
+        body.blue-theme .option-btn.active {
+            background: #1e88e5;
+            color: white;
+        }
+
+        body.no-effects .header {
+            background: #2c3e50;
+            animation: none;
+        }
+        body.dark-theme.no-effects .header {
+            background: #0d1b2a;
+        }
+        body.blue-theme.no-effects .header {
+            background: #1565c0;
+        }
+
+        html.font-size-1 { font-size: 100%; }
+        html.font-size-2 { font-size: 125%; }
+        html.font-size-3 { font-size: 150%; }
+        html.font-size-4 { font-size: 175%; }
+
+        body.images-grayscale img { filter: grayscale(100%); }
+        body.images-hide img { display: none; }
+
+        
+
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { font-size: 16px; transition: font-size 0.2s; }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: #e9e9e9;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .content h1 {
+            text-align: center;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        /* ---- Темы ---- */
+        body.dark-theme { background-color: #121212; color: #e0e0e0; }
+        body.dark-theme .content { background-color: #121212; color: #e0e0e0; }
+        body.dark-theme .content h1 { color: #ffffff; }
+
+        body.blue-theme { background-color: #d4eafc; color: #000; }
+        body.blue-theme .content { background-color: #d4eafc; color: #0d47a1; }
+        body.blue-theme .content h1 { color: #0d47a1; }
+
+        html.font-size-1 { font-size: 100%; }
+        html.font-size-2 { font-size: 125%; }
+        html.font-size-3 { font-size: 150%; }
+        html.font-size-4 { font-size: 175%; }
+
+        body.images-grayscale img { filter: grayscale(100%); }
+        body.images-hide img { display: none; }
+
+        /* ---- Галерея ---- */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .photo-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            background: #fff;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            cursor: pointer;
+            display: block;
+        }
+
+        /* Плашка с информацией – скрыта по умолчанию, показывается при наведении */
+        .info-overlay {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(4px);
+            border-radius: 12px;
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none; /* чтобы не мешала клику по фото */
+        }
+
+        .photo-card:hover .info-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-likes {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            pointer-events: auto; /* разрешаем клик по сердечку */
+        }
+
+        .info-likes i {
+            color: #ff4d6d;
+            font-size: 1.1rem;
+        }
+
+        .info-date {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        /* ---- Лайтбокс ---- */
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85%;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-caption {
+            color: white;
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        .lightbox-caption .desc {
+            font-size: 1.1rem;
+        }
+
+        .lightbox-caption .date {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px; right: 30px;
+            font-size: 32px;
+            color: white;
+            cursor: pointer;
+            line-height: 1;
+            z-index: 1001;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 42px;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .prev { left: 25px; }
+        .next { right: 25px; }
+    
+    </style>
+</head>
+
+<body>
+
+<!-- Хедер -->
+<div id="header-placeholder"></div>
+
+<main class="content">
+    <div class="container">
+        <h1>Галерея школы</h1>
+        <div class="gallery" id="gallery"></div>
+        <p style="text-align:center; color:#888; margin-top:20px;" id="status">Загрузка фотографий…</p>
+    </div>
+</main>
+
+<!-- Лайтбокс -->
+<div class="lightbox" id="lightbox">
+    <span class="close" id="closeLightbox">&times;</span>
+    <span class="nav-btn prev" id="prevBtn">❮</span>
+    <img id="lightbox-img" alt="">
+    <div class="lightbox-caption">
+        <span class="desc" id="lightboxDesc"></span>
+        <span class="date" id="lightboxDate"></span>
+    </div>
+    <span class="nav-btn next" id="nextBtn">❯</span>
+</div>
+
+<!-- Футер -->
+<div id="footer-placeholder"></div>
+
+<script src="footer.js"></script>
+<script>
+    (function() {
+        // ----- ЗАГРУЗКА HEADER -----
+        fetch('header.html')
+            .then(res => {
+                if (!res.ok) throw new Error('Ошибка загрузки header.html');
+                return res.text();
+            })
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                initHeaderAfterLoad();
+            })
+            .catch(err => console.error(err));
+
+        // ----- ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ЗАГРУЗКИ -----
+        function initHeaderAfterLoad() {
+            const accessibilityBtn = document.getElementById('accessibilityBtn');
+            const panel = document.getElementById('accessibilityPanel');
+            const closePanelBtn = document.getElementById('closeAccessibilityPanel');
+            const noEffectsCheckbox = document.getElementById('noEffectsCheckbox');
+            const themeBtns = document.querySelectorAll('[data-group="theme"] .option-btn');
+            const fontSizeBtns = document.querySelectorAll('[data-group="fontSize"] .option-btn');
+            const imageModeBtns = document.querySelectorAll('[data-group="imageMode"] .option-btn');
+            const userBlock = document.getElementById('userBlock');
+            const userAvatar = document.getElementById('userAvatar');
+            const userNameSpan = document.getElementById('userName');
+            const userRoleSpan = document.getElementById('userRole');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            let settings = {
+                theme: localStorage.getItem('a11y_theme') || 'original',
+                fontSize: localStorage.getItem('a11y_fontSize') || '1',
+                noEffects: localStorage.getItem('a11y_noEffects') === 'true',
+                imageMode: localStorage.getItem('a11y_imageMode') || 'original'
+            };
+
+            function applySettings() {
+                document.body.classList.remove('dark-theme', 'blue-theme');
+                if (settings.theme === 'dark') document.body.classList.add('dark-theme');
+                else if (settings.theme === 'blue') document.body.classList.add('blue-theme');
+                document.documentElement.classList.remove('font-size-1', 'font-size-2', 'font-size-3', 'font-size-4');
+                document.documentElement.classList.add('font-size-' + settings.fontSize);
+                if (settings.noEffects) document.body.classList.add('no-effects');
+                else document.body.classList.remove('no-effects');
+                document.body.classList.remove('images-grayscale', 'images-hide');
+                if (settings.imageMode === 'grayscale') document.body.classList.add('images-grayscale');
+                else if (settings.imageMode === 'hide') document.body.classList.add('images-hide');
+                updatePanelButtons();
+                if (noEffectsCheckbox) noEffectsCheckbox.checked = settings.noEffects;
+            }
+
+            function updatePanelButtons() {
+                themeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.theme));
+                fontSizeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.fontSize));
+                imageModeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.imageMode));
+            }
+
+            function saveSettings() {
+                localStorage.setItem('a11y_theme', settings.theme);
+                localStorage.setItem('a11y_fontSize', settings.fontSize);
+                localStorage.setItem('a11y_noEffects', settings.noEffects);
+                localStorage.setItem('a11y_imageMode', settings.imageMode);
+            }
+
+            themeBtns.forEach(btn => btn.addEventListener('click', () => { settings.theme = btn.dataset.value; saveSettings(); applySettings(); }));
+            fontSizeBtns.forEach(btn => btn.addEventListener('click', () => { settings.fontSize = btn.dataset.value; saveSettings(); applySettings(); }));
+            imageModeBtns.forEach(btn => btn.addEventListener('click', () => { settings.imageMode = btn.dataset.value; saveSettings(); applySettings(); }));
+            if (noEffectsCheckbox) noEffectsCheckbox.addEventListener('change', () => { settings.noEffects = noEffectsCheckbox.checked; saveSettings(); applySettings(); });
+
+            function togglePanel() {
+                panel.classList.toggle('active');
+                if (accessibilityBtn) accessibilityBtn.classList.toggle('active-icon', panel.classList.contains('active'));
+            }
+            accessibilityBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePanel(); });
+            closePanelBtn.addEventListener('click', () => { panel.classList.remove('active'); accessibilityBtn.classList.remove('active-icon'); });
+            document.addEventListener('click', (e) => {
+                if (panel && !panel.contains(e.target) && e.target !== accessibilityBtn) {
+                    panel.classList.remove('active');
+                    accessibilityBtn.classList.remove('active-icon');
+                }
+            });
+
+            applySettings();
+
+            // Авторизация
+            const API_URL = (() => {
+                if (window.location.protocol.startsWith('http')) {
+                    const host = window.location.hostname || '127.0.0.1';
+                    return `${window.location.protocol}//${host}:5000`;
+                }
+                return 'http://127.0.0.1:5000';
+            })();
+
+            const isAuth = localStorage.getItem('auth') === 'true';
+            const savedLogin = localStorage.getItem('login');
+            let savedRole = localStorage.getItem('role') || 'Ученик';
+            let savedFullName = localStorage.getItem('full_name') || savedLogin;
+            let savedAvatarColor = localStorage.getItem('avatar_color') || null;
+            let savedProfilePhoto = localStorage.getItem('profile_photo') || '';
+
+            function getInitials(name) { return name ? name.charAt(0).toUpperCase() : '?'; }
+            function getDefaultAvatarColor(name) {
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                const colors = [
+                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+                ];
+                return colors[Math.abs(hash) % colors.length];
+            }
+
+            function setAvatarElement(el, name, color, photo) {
+                if (!el) return;
+                if (photo) {
+                    el.style.background = 'transparent';
+                    el.style.backgroundImage = `url(${photo})`;
+                    el.style.backgroundSize = 'cover';
+                    el.style.backgroundPosition = 'center';
+                    el.textContent = '';
+                } else {
+                    el.style.backgroundImage = '';
+                    el.style.background = color || getDefaultAvatarColor(name || savedLogin);
+                    el.textContent = getInitials(name || savedLogin);
+                }
+            }
+
+            function updateUserInterface() {
+                if (isAuth && savedLogin) {
+                    if (userBlock) userBlock.style.display = 'flex';
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                    const displayName = savedFullName || savedLogin;
+                    const avatarColor = savedAvatarColor || getDefaultAvatarColor(displayName);
+                    setAvatarElement(userAvatar, displayName, avatarColor, savedProfilePhoto);
+                    if (userNameSpan) userNameSpan.textContent = displayName;
+                    if (userRoleSpan) userRoleSpan.textContent = savedRole;
+                } else {
+                    if (userBlock) userBlock.style.display = 'none';
+                    if (loginBtn) loginBtn.style.display = 'inline-block';
+                    if (logoutBtn) logoutBtn.style.display = 'none';
+                }
+            }
+
+            async function loadHeaderUserInfo() {
+                if (!isAuth || !savedLogin) return;
+                updateUserInterface();
+                try {
+                    const response = await fetch(`${API_URL}/api/user_info?login=${encodeURIComponent(savedLogin)}`, { mode: 'cors' });
+                    const data = await response.json();
+                    if (data.success && data.user) {
+                        savedRole = data.user.role || savedRole;
+                        savedFullName = data.user.full_name || savedFullName || savedLogin;
+                        savedAvatarColor = data.user.avatar_color || savedAvatarColor;
+                        savedProfilePhoto = data.user.profile_photo || savedProfilePhoto || '';
+
+                        localStorage.setItem('role', savedRole);
+                        localStorage.setItem('full_name', savedFullName);
+                        if (savedAvatarColor) localStorage.setItem('avatar_color', savedAvatarColor);
+                        if (savedProfilePhoto) localStorage.setItem('profile_photo', savedProfilePhoto);
+                        else localStorage.removeItem('profile_photo');
+
+                        updateUserInterface();
+                    }
+                } catch (err) {
+                    console.error('Не удалось загрузить фото профиля:', err);
+                }
+            }
+
+            loadHeaderUserInfo();
+            if (userBlock) userBlock.onclick = () => { if (isAuth && savedLogin) window.location.href = 'lk.html'; };
+            if (loginBtn) loginBtn.onclick = () => { window.location.href = 'login.html'; };
+            if (logoutBtn) logoutBtn.onclick = () => {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    localStorage.removeItem('auth');
+                    localStorage.removeItem('login');
+                    localStorage.removeItem('password');
+                    localStorage.removeItem('role');
+                    localStorage.removeItem('full_name');
+                    localStorage.removeItem('avatar_color');
+                    localStorage.removeItem('profile_photo');
+                    location.reload();
+                }
+            };
+        }
+
+    })();
+</script>
+
+<script>
+    (function() {
+        // ========== НАСТРОЙКИ ==========
+        const LIST_URL = 'photos/list.json';                 // <--- теперь JSON-файл
+        const STORAGE_META_KEY = 'gallery_photos_meta';
+        const STORAGE_LIKES_KEY = 'gallery_user_likes';
+
+        // ========== УТИЛИТЫ ХРАНИЛИЩА ==========
+        function getMeta() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_META_KEY)) || {}; } catch(e) { return {}; }
+        }
+        function setMeta(meta) { localStorage.setItem(STORAGE_META_KEY, JSON.stringify(meta)); }
+
+        function getUserLikes() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_LIKES_KEY)) || []; } catch(e) { return []; }
+        }
+        function setUserLikes(likes) { localStorage.setItem(STORAGE_LIKES_KEY, JSON.stringify(likes)); }
+
+        // ========== ЗАГРУЗКА СПИСКА ФОТО ==========
+        async function fetchPhotoList() {
+            const response = await fetch(LIST_URL);
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const data = await response.json();
+            if (!Array.isArray(data)) throw new Error('Неверный формат JSON');
+            return data.map(name => 'photos/' + name);
+        }
+
+        // ========== ГАЛЕРЕЯ ==========
+        const galleryDiv = document.getElementById('gallery');
+        const statusEl = document.getElementById('status');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxDesc = document.getElementById('lightboxDesc');
+        const lightboxDate = document.getElementById('lightboxDate');
+        const closeBtn = document.getElementById('closeLightbox');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let allPhotos = [];
+        let currentIndex = 0;
+
+        async function loadGallery() {
+            try {
+                statusEl.textContent = 'Загрузка списка фотографий…';
+                const urls = await fetchPhotoList();
+                if (urls.length === 0) {
+                    statusEl.textContent = 'В папке photos пока нет изображений.';
+                    return;
+                }
+
+                const meta = getMeta();
+                const userLikes = getUserLikes();
+
+                allPhotos = urls.map(url => {
+                    const id = 'photo_' + url.replace(/[^a-zA-Z0-9]/g, '_');
+                    const saved = meta[id] || {};
+                    return {
+                        id: id,
+                        url: url,
+                        description: saved.description || '',
+                        addedAt: saved.addedAt || new Date().toISOString(),
+                        likes: saved.likes || 0
+                    };
+                });
+
+                // Обновим метаданные, если появились новые фото
+                const newMeta = {};
+                allPhotos.forEach(p => { newMeta[p.id] = { description: p.description, addedAt: p.addedAt, likes: p.likes }; });
+                setMeta(newMeta);
+
+                statusEl.textContent = '';
+                renderGallery();
+            } catch (error) {
+                console.error(error);
+                statusEl.textContent = 'Не удалось загрузить фотографии. Проверьте, что файл photos/list.json существует и доступен.';
+            }
+        }
+
+        function renderGallery() {
+            galleryDiv.innerHTML = '';
+            if (allPhotos.length === 0) {
+                galleryDiv.innerHTML = '<p style="text-align:center; color:#888;">Нет фотографий.</p>';
+                return;
+            }
+
+            const userLikes = getUserLikes();
+
+            allPhotos.forEach((photo, index) => {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+
+                const img = document.createElement('img');
+                img.src = photo.url;
+                img.alt = photo.description || 'Фото ' + (index + 1);
+                img.addEventListener('click', () => openLightbox(index));
+
+                const overlay = document.createElement('div');
+                overlay.className = 'info-overlay';
+
+                const likesDiv = document.createElement('div');
+                likesDiv.className = 'info-likes';
+                if (userLikes.includes(photo.id)) likesDiv.classList.add('liked');
+                likesDiv.innerHTML = `<i class="${userLikes.includes(photo.id) ? 'fas' : 'far'} fa-heart"></i> <span>${photo.likes}</span>`;
+                likesDiv.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleLike(photo, likesDiv);
+                });
+
+                const dateDiv = document.createElement('div');
+                dateDiv.className = 'info-date';
+                dateDiv.textContent = formatDate(photo.addedAt);
+
+                overlay.appendChild(likesDiv);
+                overlay.appendChild(dateDiv);
+                card.appendChild(img);
+                card.appendChild(overlay);
+                galleryDiv.appendChild(card);
+            });
+        }
+
+        function formatDate(isoString) {
+            if (!isoString) return '';
+            const date = new Date(isoString);
+            return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        // ========== ЛАЙКИ ==========
+        function toggleLike(photo, likesDiv) {
+            const userLikes = getUserLikes();
+            const likedIndex = userLikes.indexOf(photo.id);
+
+            if (likedIndex > -1) {
+                userLikes.splice(likedIndex, 1);
+                photo.likes = Math.max(0, photo.likes - 1);
+                likesDiv.classList.remove('liked');
+                likesDiv.querySelector('i').className = 'far fa-heart';
+            } else {
+                userLikes.push(photo.id);
+                photo.likes += 1;
+                likesDiv.classList.add('liked');
+                likesDiv.querySelector('i').className = 'fas fa-heart';
+            }
+
+            likesDiv.querySelector('span').textContent = photo.likes;
+            setUserLikes(userLikes);
+
+            // Обновить метаданные
+            const meta = getMeta();
+            meta[photo.id] = { description: photo.description, addedAt: photo.addedAt, likes: photo.likes };
+            setMeta(meta);
+        }
+
+        // ========== ЛАЙТБОКС ==========
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightboxContent();
+            lightbox.style.display = 'flex';
+        }
+
+        function updateLightboxContent() {
+            const photo = allPhotos[currentIndex];
+            lightboxImg.src = photo.url;
+            lightboxDesc.textContent = photo.description || '';
+            lightboxDate.textContent = photo.addedAt ? 'Добавлено: ' + formatDate(photo.addedAt) : '';
+        }
+
+        function closeLightbox() { lightbox.style.display = 'none'; }
+
+        function changeSlide(step) {
+            currentIndex += step;
+            if (currentIndex < 0) currentIndex = allPhotos.length - 1;
+            if (currentIndex >= allPhotos.length) currentIndex = 0;
+            updateLightboxContent();
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        prevBtn.addEventListener('click', () => changeSlide(-1));
+        nextBtn.addEventListener('click', () => changeSlide(1));
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') changeSlide(-1);
+                if (e.key === 'ArrowRight') changeSlide(1);
+                if (e.key === 'Escape') closeLightbox();
+            }
+        });
+
+        // ========== СТАРТ ==========
+        loadGallery();
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сведения об образовательной организации — МКОУ Буерак-Поповская СКШ</title>
+    <link rel="icon" type="image/png" href="logo1.png">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="footer.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            transition: font-size 0.2s;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: #e9e9e9;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ----- ХЕДЕР ----- */
+        .header {
+            background: linear-gradient(270deg, #2ea3d0, #3a5fa0, #2ea3d0);
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+            color: white;
+            padding: 20px 0;
+            transition: background 0.3s;
+        }
+
+        @keyframes gradientMove {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo img {
+            width: 80px;
+            transition: filter 0.3s;
+        }
+
+        .title {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .title h1 {
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .title p {
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: relative;
+        }
+
+        .user-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+
+        .user-block:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 800;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            line-height: 1.2;
+        }
+
+        .header-icons>i {
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .header-icons>i.active-icon {
+            color: #ffd966;
+        }
+
+        /* ----- ПАНЕЛЬ ДОСТУПНОСТИ ----- */
+        .accessibility-panel {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            padding: 30px;
+            z-index: 1000;
+            width: 480px;
+            margin-top: 10px;
+            color: #333;
+            font-family: 'Raleway', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .accessibility-panel.active {
+            display: block;
+        }
+
+        .accessibility-panel h4 {
+            margin-bottom: 10px;
+            font-weight: 800;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .option-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            padding: 6px 14px;
+            border: 2px solid #ccc;
+            background: #f8f8f8;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn.active {
+            background: #2ea3d0;
+            color: white;
+            border-color: #2ea3d0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 0.95rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .close-panel {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.2s;
+        }
+
+        .close-panel:hover {
+            color: #000;
+        }
+
+        /* ----- НАВИГАЦИЯ ----- */
+        .nav {
+            margin-top: 25px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-between;
+            list-style: none;
+        }
+
+        .menu li {
+            position: relative;
+        }
+
+        .menu>li>a {
+            text-decoration: none;
+            font-weight: 800;
+            color: black;
+            padding: 10px 15px;
+            display: block;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .menu>li>a:hover {
+            background: #2ea3d0;
+            color: white;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            min-width: 180px;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.25s ease;
+            z-index: 10;
+        }
+
+        .menu li:hover .dropdown {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown li {
+            list-style: none;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 12px 15px;
+            font-weight: 700;
+            color: black;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .dropdown a:hover {
+            background: #2ea3d0;
+            color: white;
+        }
+
+        /* ----- ОСНОВНОЙ КОНТЕНТ ----- */
+        .content {
+            padding: 40px 20px;
+            flex: 1;
+        }
+
+        /* ----- ТЕМЫ ----- */
+        body.dark-theme {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        body.dark-theme .header {
+            background: linear-gradient(270deg, #0f3b47, #1a2b5e, #0f3b47);
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+        }
+        body.dark-theme .nav {
+            background: #1e1e1e;
+        }
+        body.dark-theme .menu>li>a {
+            color: #e0e0e0;
+        }
+        body.dark-theme .menu>li>a:hover {
+            background: #3a506b;
+            color: white;
+        }
+        body.dark-theme .dropdown {
+            background: #2a2a2a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        body.dark-theme .dropdown a {
+            color: #e0e0e0;
+        }
+        body.dark-theme .dropdown a:hover {
+            background: #3a506b;
+            color: white;
+        }
+        body.dark-theme .accessibility-panel {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+        body.dark-theme .option-btn {
+            background: #3a3a3a;
+            border-color: #555;
+            color: #ccc;
+        }
+        body.dark-theme .option-btn.active {
+            background: #2ea3d0;
+            color: white;
+            border-color: #2ea3d0;
+        }
+        body.dark-theme .close-panel {
+            color: #aaa;
+        }
+        body.dark-theme .close-panel:hover {
+            color: white;
+        }
+
+        body.blue-theme {
+            background-color: #d4eafc;
+            color: #000;
+        }
+        body.blue-theme .header {
+            background: linear-gradient(270deg, #1e88e5, #1565c0, #1e88e5);
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+        }
+        body.blue-theme .nav {
+            background: #bbdefb;
+        }
+        body.blue-theme .menu>li>a {
+            color: #000;
+        }
+        body.blue-theme .menu>li>a:hover {
+            background: #1e88e5;
+            color: white;
+        }
+        body.blue-theme .dropdown {
+            background: #e3f2fd;
+        }
+        body.blue-theme .accessibility-panel {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+        body.blue-theme .option-btn {
+            background: #bbdefb;
+            border-color: #90caf9;
+            color: #0d47a1;
+        }
+        body.blue-theme .option-btn.active {
+            background: #1e88e5;
+            color: white;
+        }
+
+        body.no-effects .header {
+            background: #2c3e50;
+            animation: none;
+        }
+        body.dark-theme.no-effects .header {
+            background: #0d1b2a;
+        }
+        body.blue-theme.no-effects .header {
+            background: #1565c0;
+        }
+
+        html.font-size-1 { font-size: 100%; }
+        html.font-size-2 { font-size: 125%; }
+        html.font-size-3 { font-size: 150%; }
+        html.font-size-4 { font-size: 175%; }
+
+        body.images-grayscale img { filter: grayscale(100%); }
+        body.images-hide img { display: none; }
+
+        /* ----- СТИЛИ СТРАНИЦЫ "СВЕДЕНИЯ ОБ ОРГАНИЗАЦИИ" ----- */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            border-left: 6px solid #2ea3d0;
+            padding-left: 20px;
+        }
+        body.dark-theme .section-title { color: #ffffff; border-left-color: #ffd966; }
+        body.blue-theme .section-title { color: #0d47a1; border-left-color: #1e88e5; }
+
+        .info-block {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+        body.dark-theme .info-block { background: #1e1e1e; }
+        body.blue-theme .info-block { background: #e3f2fd; }
+
+        .info-block h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #2ea3d0;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        body.dark-theme .info-block h2 { color: #4facfe; }
+        body.blue-theme .info-block h2 { color: #1565c0; }
+
+        .info-block h2 i {
+            font-size: 1.2rem;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table tr {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        body.dark-theme .info-table tr { border-bottom-color: #333; }
+        body.blue-theme .info-table tr { border-bottom-color: #bbdefb; }
+
+        .info-table tr:last-child {
+            border-bottom: none;
+        }
+        .info-table td {
+            padding: 10px 8px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            vertical-align: top;
+        }
+        .info-table td:first-child {
+            font-weight: 700;
+            color: #555;
+            width: 40%;
+            white-space: nowrap;
+        }
+        body.dark-theme .info-table td:first-child { color: #aaa; }
+        body.blue-theme .info-table td:first-child { color: #1565c0; }
+
+        .info-table td:last-child {
+            color: #222;
+        }
+        body.dark-theme .info-table td:last-child { color: #e0e0e0; }
+        body.blue-theme .info-table td:last-child { color: #0d1b2a; }
+
+        .info-table a {
+            color: #2ea3d0;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+        .info-table a:hover { color: #3a5fa0; text-decoration: underline; }
+        body.dark-theme .info-table a { color: #4facfe; }
+        body.blue-theme .info-table a { color: #1565c0; }
+
+        .info-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 35px;
+        }
+        .info-nav-btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 2px solid #2ea3d0;
+            background: transparent;
+            color: #2ea3d0;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s;
+            font-family: 'Raleway', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .info-nav-btn:hover,
+        .info-nav-btn.active {
+            background: #2ea3d0;
+            color: white;
+            box-shadow: 0 4px 12px rgba(46,163,208,0.35);
+        }
+        body.dark-theme .info-nav-btn { border-color: #4facfe; color: #4facfe; }
+        body.dark-theme .info-nav-btn:hover,
+        body.dark-theme .info-nav-btn.active { background: #4facfe; color: #121212; }
+        body.blue-theme .info-nav-btn { border-color: #1565c0; color: #1565c0; }
+        body.blue-theme .info-nav-btn:hover,
+        body.blue-theme .info-nav-btn.active { background: #1565c0; color: white; }
+        .doc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    transition: 0.2s;
+}
+
+.doc-item:hover {
+    background: #2ea3d0;
+    color: white;
+}
+
+.doc-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 700;
+}
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #2ea3d0;
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.download-btn:hover {
+    background: #3a5fa0;
+}
+        .docs-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .docs-list li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #222;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+        body.dark-theme .docs-list li a { background: #2a2a2a; color: #e0e0e0; border-color: #333; }
+        body.blue-theme .docs-list li a { background: #bbdefb; color: #0d47a1; border-color: #90caf9; }
+        .docs-list li a:hover {
+            background: #2ea3d0;
+            color: white;
+            border-color: #2ea3d0;
+            transform: translateX(5px);
+        }
+        body.dark-theme .docs-list li a:hover { background: #4facfe; color: #121212; border-color: #4facfe; }
+        body.blue-theme .docs-list li a:hover { background: #1565c0; color: white; border-color: #1565c0; }
+        .docs-list li a i {
+            font-size: 1.2rem;
+            color: #2ea3d0;
+            flex-shrink: 0;
+            transition: color 0.2s;
+        }
+        .docs-list li a:hover i { color: white; }
+        body.dark-theme .docs-list li a i { color: #4facfe; }
+        body.dark-theme .docs-list li a:hover i { color: #121212; }
+        body.blue-theme .docs-list li a i { color: #1565c0; }
+        body.blue-theme .docs-list li a:hover i { color: white; }
+
+
+
+        /* ----- СОВРЕМЕННАЯ СХЕМА УПРАВЛЕНИЯ ----- */
+        .org-structure {
+            position: relative;
+            overflow: hidden;
+            padding: 28px;
+            border-radius: 22px;
+            background:
+                radial-gradient(circle at top left, rgba(46, 163, 208, 0.16), transparent 34%),
+                linear-gradient(135deg, #f8fbff 0%, #ffffff 55%, #f3f7fb 100%);
+            border: 1px solid rgba(46, 163, 208, 0.16);
+        }
+
+        .org-structure::before {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            border: 1px dashed rgba(46, 163, 208, 0.18);
+            border-radius: 18px;
+            pointer-events: none;
+        }
+
+        .org-level {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .org-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .org-grid-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .org-grid-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .org-grid-two {
+            grid-template-columns: repeat(2, minmax(0, 260px));
+            justify-content: center;
+            gap: 28px;
+        }
+
+        .org-card {
+            min-height: 78px;
+            padding: 18px 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            font-weight: 800;
+            line-height: 1.25;
+            box-shadow: 0 12px 28px rgba(31, 64, 104, 0.12);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .org-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 34px rgba(31, 64, 104, 0.18);
+        }
+
+        .org-card i {
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+
+        .org-card-main {
+            width: min(100%, 520px);
+            min-height: 92px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #d96f79, #a9445a);
+            font-size: 1.25rem;
+            letter-spacing: 0.01em;
+        }
+
+        .org-card-kicker {
+            font-size: 0.85rem;
+            opacity: 0.88;
+        }
+
+        .org-card-purple {
+            color: #ffffff;
+            background: linear-gradient(135deg, #8a76c9, #5a4599);
+        }
+
+        .org-card-accent {
+            background: linear-gradient(135deg, #7d67c4, #49378c);
+        }
+
+        .org-card-method {
+            width: min(100%, 760px);
+            color: #5d2b00;
+            background: linear-gradient(135deg, #ffbd7a, #f08b3a);
+            font-size: 1.12rem;
+        }
+
+        .org-card-blue {
+            color: #113b5f;
+            background: linear-gradient(135deg, #c6ecff, #7bbde7);
+            font-size: 0.88rem;
+        }
+
+        .org-card-teachers {
+            width: min(100%, 860px);
+            color: #173f17;
+            background: linear-gradient(135deg, #b9e881, #75bd43);
+            font-size: 1.1rem;
+        }
+
+        .org-card-light {
+            color: #24435c;
+            background: linear-gradient(135deg, #e8f6ff, #b8d7ef);
+        }
+
+        .org-connector {
+            position: relative;
+            z-index: 1;
+            width: 2px;
+            height: 28px;
+            margin: 8px auto;
+            background: linear-gradient(to bottom, rgba(46, 163, 208, 0.15), rgba(46, 163, 208, 0.7));
+        }
+
+        .org-connector::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -1px;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid rgba(46, 163, 208, 0.72);
+            border-bottom: 2px solid rgba(46, 163, 208, 0.72);
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .org-connector-short { height: 20px; }
+
+        body.dark-theme .org-structure {
+            background:
+                radial-gradient(circle at top left, rgba(79, 172, 254, 0.14), transparent 34%),
+                linear-gradient(135deg, #222831 0%, #1e1e1e 60%, #171717 100%);
+            border-color: rgba(79, 172, 254, 0.18);
+        }
+        body.dark-theme .org-structure::before { border-color: rgba(79, 172, 254, 0.16); }
+        body.dark-theme .org-card-blue { color: #06223a; }
+        body.dark-theme .org-card-light { color: #173047; }
+
+        body.blue-theme .org-structure {
+            background:
+                radial-gradient(circle at top left, rgba(21, 101, 192, 0.14), transparent 34%),
+                linear-gradient(135deg, #e3f2fd 0%, #f5fbff 100%);
+            border-color: rgba(21, 101, 192, 0.18);
+        }
+
+        @media (max-width: 768px) {
+            .org-structure { padding: 18px; }
+            .org-grid-three,
+            .org-grid-four,
+            .org-grid-two { grid-template-columns: 1fr; gap: 12px; }
+            .org-card { min-height: 68px; padding: 15px 16px; }
+            .org-card-main,
+            .org-card-method,
+            .org-card-teachers { width: 100%; }
+
+            .accessibility-panel { width: 90vw; right: -10px; padding: 20px; }
+            .user-info { display: none; }
+            .user-avatar { width: 36px; height: 36px; font-size: 1rem; }
+            .info-table td:first-child { width: 50%; white-space: normal; }
+            .info-nav-btn { font-size: 0.8rem; padding: 8px 14px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="header-placeholder"></div>
+
+<main class="content">
+    <div class="container">
+
+        <h2 class="section-title">Сведения об образовательной организации</h2>
+
+        <!-- Навигация по разделам -->
+        <div class="info-nav">
+            <a class="info-nav-btn active" href="#basic"><i class="fa-solid fa-school"></i> Основные сведения</a>
+            <a class="info-nav-btn" href="#structure"><i class="fa-solid fa-sitemap"></i> Структура</a>
+            <a class="info-nav-btn" href="#education"><i class="fa-solid fa-book"></i> Образование</a>
+            <a class="info-nav-btn" href="#staff"><i class="fa-solid fa-users"></i> Руководство</a>
+            <a class="info-nav-btn" href="#material"><i class="fa-solid fa-building"></i> МТО</a>
+            <a class="info-nav-btn" href="#finance"><i class="fa-solid fa-ruble-sign"></i> Финансы</a>
+            <a class="info-nav-btn" href="#vacancies"><i class="fa-solid fa-briefcase"></i> Вакансии</a>
+            <a class="info-nav-btn" href="#docs"><i class="fa-solid fa-file-lines"></i> Документы</a>
+        </div>
+
+        <!-- 1. Основные сведения -->
+        <div class="info-block" id="basic">
+            <h2><i class="fa-solid fa-school"></i> Основные сведения</h2>
+            <table class="info-table">
+                <tr>
+                    <td>Полное наименование</td>
+                    <td>Муниципальное казённое общеобразовательное учреждение Буерак-Поповская средняя казачья школа</td>
+                </tr>
+                <tr>
+                    <td>Сокращённое наименование</td>
+                    <td>МКОУ Буерак-Поповская СКШ</td>
+                </tr>
+                <tr>
+                    <td>Дата создания</td>
+                    <td>1971 год</td>
+                </tr>
+                <tr>
+                    <td>Учредитель</td>
+                    <td>Администрация Серафимовичского муниципального района Волгоградской области</td>
+                </tr>
+                <tr>
+                    <td>Место нахождения</td>
+                    <td>403474, Волгоградская область, Серафимовичский район, х. Буерак-Поповский, ул. Школьная, д. 1</td>
+                </tr>
+                <tr>
+                    <td>Режим работы</td>
+                    <td>Пн–Пт: 8:00 – 17:00</td>
+                </tr>
+                <tr>
+                    <td>Телефон</td>
+                    <td><a href="tel:+78443812345">8 (844-38) 1-23-45</a></td>
+                </tr>
+                <tr>
+                    <td>E-mail</td>
+                    <td><a href="mailto:bp_school1971@volganet.ru">bp_school1971@volganet.ru</a></td>
+                </tr>
+                <tr>
+                    <td>Сайт</td>
+                    <td><a href="#" target="_blank">bp-school.ru</a></td>
+                </tr>
+                <tr>
+                    <td>ВКонтакте</td>
+                    <td><a href="https://vk.com/bp_school1971" target="_blank">vk.com/bp_school1971</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 2. Структура и органы управления -->
+        <div class="info-block" id="structure">
+            <h2><i class="fa-solid fa-sitemap"></i> Структура и органы управления</h2>
+
+            <div class="org-structure" aria-label="Структура органов управления МКОУ Буерак-Поповской СКШ">
+                <div class="org-level org-level-top">
+                    <div class="org-card org-card-main">
+                        <span class="org-card-kicker">Органы управления</span>
+                        <strong>МКОУ Буерак-Поповской СШ</strong>
+                    </div>
+                </div>
+
+                <div class="org-connector org-connector-short"></div>
+
+                <div class="org-grid org-grid-three">
+                    <div class="org-card org-card-purple">
+                        <i class="fa-solid fa-people-roof"></i>
+                        <span>Управляющий совет</span>
+                    </div>
+                    <div class="org-card org-card-purple org-card-accent">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span>Директор</span>
+                    </div>
+                    <div class="org-card org-card-purple">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span>Педагогический совет</span>
+                    </div>
+                </div>
+
+                <div class="org-connector"></div>
+
+                <div class="org-level">
+                    <div class="org-card org-card-method">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>Методический совет</span>
+                    </div>
+                </div>
+
+                <div class="org-connector"></div>
+
+                <div class="org-grid org-grid-four">
+                    <div class="org-card org-card-blue">
+                        <span>МО учителей начальных классов</span>
+                    </div>
+                    <div class="org-card org-card-blue">
+                        <span>МО учителей гуманитарного цикла</span>
+                    </div>
+                    <div class="org-card org-card-blue">
+                        <span>МО учителей естественно-математического цикла</span>
+                    </div>
+                    <div class="org-card org-card-blue">
+                        <span>МО классных руководителей</span>
+                    </div>
+                </div>
+
+                <div class="org-connector"></div>
+
+                <div class="org-level">
+                    <div class="org-card org-card-teachers">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Педагоги школы</span>
+                    </div>
+                </div>
+
+                <div class="org-connector"></div>
+
+                <div class="org-grid org-grid-two">
+                    <div class="org-card org-card-light">
+                        <i class="fa-solid fa-hat-cowboy"></i>
+                        <span>Совет атаманов</span>
+                    </div>
+                    <div class="org-card org-card-light">
+                        <i class="fa-solid fa-children"></i>
+                        <span>Школьная республика «Вольница»</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Образование -->
+        <div class="info-block" id="education">
+            <h2><i class="fa-solid fa-book"></i> Образование</h2>
+            <table class="info-table">
+                <tr>
+                    <td>Реализуемые уровни образования</td>
+                    <td>Начальное общее образование (1–4 кл.); Основное общее образование (5–9 кл.); Среднее общее образование (10–11 кл.)</td>
+                </tr>
+                <tr>
+                    <td>Форма обучения</td>
+                    <td>Очная</td>
+                </tr>
+                <tr>
+                    <td>Язык обучения</td>
+                    <td>Русский</td>
+                </tr>
+                <tr>
+                    <td>Срок обучения</td>
+                    <td>11 лет</td>
+                </tr>
+                <tr>
+                    <td>Профили обучения (10–11 кл.)</td>
+                    <td>Физико-математический; Биолого-химический; Социально-гуманитарный</td>
+                </tr>
+                <tr>
+                    <td>Элективные курсы</td>
+                    <td>«Удивительный мир математики», «Познавательная биология», «Органическая химия в вопросах и задачах», «Обучение сочинениям разных жанров», «Избранные вопросы математики», «Трудные вопросы орфографии», «Трудные вопросы обществознания»</td>
+                </tr>
+                <tr>
+                    <td>Казачье образование</td>
+                    <td>Кадетские классы, курс казачьей культуры и традиций</td>
+                </tr>
+                <tr>
+                    <td>Численность обучающихся</td>
+                    <td>Актуальные данные размещаются в разделе «Документы»</td>
+                </tr>
+                <tr>
+                    <td>Лицензия на образовательную деятельность</td>
+                    <td>№ ХXXXX от 01.09.2023 — <a href="#">скачать (PDF)</a></td>
+                </tr>
+                <tr>
+                    <td>Свидетельство о государственной аккредитации</td>
+                    <td>№ ХXXXX от 15.11.2022 — <a href="#">скачать (PDF)</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 4. Руководство. Педагогический состав -->
+        <div class="info-block" id="staff">
+            <h2><i class="fa-solid fa-users"></i> Руководство</h2>
+            <table class="info-table">
+                <tr>
+                    <td>Фамилия, имя, отчество</td>
+                    <td>Должность</td>
+                    <td>Телефон</td>
+                    <td>E-mail</td>
+                </tr>
+                <tr>
+                    <td>Дьячихина Ольга Николаевна</td>
+                    <td>Директор</td>
+                    <td><a href="tel:+79044203854">8 904 420-38-54</a></td>
+                    <td><a href="mailto:srf_sh.buerakpp@volganet.ru">srf_sh.buerakpp@volganet.ru</a></td>
+                </tr>
+                <tr>
+                    <td>Попова Наталия Николаевна</td>
+                    <td>Советник директора</td>
+                    <td><a href="tel:+79033769149">8 903 376-91-49</a></td>
+                    <td><a href="mailto:srf_sh.buerakpp@volganet.ru">srf_sh.buerakpp@volganet.ru</a></td>
+                </tr>
+                <tr>
+                    <td>Пастушкова Татьяна Николаевна</td>
+                    <td>Старший методист</td>
+                    <td><a href="tel:+79044189110">8 904 418-91-10</a></td>
+                    <td><a href="mailto:srf_sh.buerakpp@volganet.ru">srf_sh.buerakpp@volganet.ru</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 5. Материально-техническое обеспечение -->
+        <div class="info-block" id="material">
+            <h2><i class="fa-solid fa-building"></i> Материально-техническое обеспечение</h2>
+            <table class="info-table">
+                <tr>
+                    <td>Учебные кабинеты</td>
+                    <td>12 кабинетов, в т.ч. кабинеты физики, химии, биологии, информатики (каб. 4), спортивный зал (каб. 12), мастерские (каб. 11)</td>
+                </tr>
+                <tr>
+                    <td>Компьютерная техника</td>
+                    <td>Кабинет информатики оснащён современными ПК, интерактивными досками</td>
+                </tr>
+                <tr>
+                    <td>Библиотека</td>
+                    <td>Фонд учебной и художественной литературы; читальный зал</td>
+                </tr>
+                <tr>
+                    <td>Спортивная инфраструктура</td>
+                    <td>Спортивный зал, спортивная площадка, тир</td>
+                </tr>
+                <tr>
+                    <td>Столовая</td>
+                    <td>Организовано горячее питание для всех обучающихся</td>
+                </tr>
+                <tr>
+                    <td>Доступная среда</td>
+                    <td>Пандусы, специально оборудованные санузлы для маломобильных граждан</td>
+                </tr>
+                <tr>
+                    <td>Интернет</td>
+                    <td>Широкополосный доступ во всех учебных помещениях</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 6. Финансово-хозяйственная деятельность -->
+        <div class="info-block" id="finance">
+            <h2><i class="fa-solid fa-ruble-sign"></i> Финансово-хозяйственная деятельность</h2>
+            <table class="info-table">
+                <tr>
+                    <td>Объём доходов (текущий год)</td>
+                    <td>Сведения размещены в разделе «Документы» (план ФХД)</td>
+                </tr>
+                <tr>
+                    <td>Объём расходов</td>
+                    <td>Сведения размещены в разделе «Документы»</td>
+                </tr>
+                <tr>
+                    <td>Источники финансирования</td>
+                    <td>Бюджет Серафимовичского муниципального района; субвенции Волгоградской области</td>
+                </tr>
+                <tr>
+                    <td>Отчёты о деятельности</td>
+                    <td><a href="#">Отчёт о результатах деятельности (PDF)</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 7. Вакансии -->
+        <div class="info-block" id="vacancies">
+            <h2><i class="fa-solid fa-briefcase"></i> Вакансии</h2>
+            <table class="info-table">
+                <tr>
+                    <td>Текущие вакансии</td>
+                    <td>Актуальная информация о вакантных должностях размещается на сайте <a href="https://trudvsem.ru" target="_blank">trudvsem.ru</a> и обновляется по мере необходимости.</td>
+                </tr>
+                <tr>
+                    <td>Контакт по вопросам трудоустройства</td>
+                    <td><a href="mailto:bp_school1971@volganet.ru">bp_school1971@volganet.ru</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 8. Документы -->
+        <div class="info-block" id="docs">
+            <h2> Документы</h2>
+            <ul class="docs-list">
+                <li class="doc-item">
+                    <a href="docs/УСТАВ.pdf" target="_blank" class="doc-link">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Устав образовательной организации</span>
+                    </a>
+                
+                    <a href="docs/УСТАВ.pdf" download class="download-btn">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="docs/Внутренний_распорядок.pdf" target="_blank" class="doc-link">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Правила внутреннего распорядка обучающихся</span>
+                    </a>
+                
+                    <a href="docs/Внутренний_распорядок.pdf" download class="download-btn">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="docs/Трудовой_распорядок.pdf" target="_blank" class="doc-link">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Правила внутреннего трудового распорядка</span>
+                    </a>
+                
+                    <a href="docs/Трудовой_распорядок.pdf" download class="download-btn">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="docs/Отчёт_о_диагностике.xlsx" target="_blank" class="doc-link">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Отчет о результатах самообследования</span>
+                    </a>
+                
+                    <a href="docs/Отчёт_о_диагностике.xlsx" download class="download-btn">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Учебный план</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Расписание занятий</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Правила внутреннего распорядка обучающихся</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Правила внутреннего трудового распорядка</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Коллективный договор</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Отчёт о результатах самообследования</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Предписания органов государственного контроля</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Отчёты об исполнении предписаний</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> Публичный доклад директора</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-pdf"></i> План финансово-хозяйственной деятельности</a></li>
+            </ul>
+        </div>
+
+    </div>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script src="footer.js"></script>
+<script>
+    (function () {
+        // ----- ЗАГРУЗКА HEADER -----
+        fetch('header.html')
+            .then(res => {
+                if (!res.ok) throw new Error('Ошибка загрузки header.html');
+                return res.text();
+            })
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                initHeaderAfterLoad();
+            })
+            .catch(err => console.error(err));
+
+        // ----- ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ЗАГРУЗКИ -----
+        function initHeaderAfterLoad() {
+            const accessibilityBtn = document.getElementById('accessibilityBtn');
+            const panel = document.getElementById('accessibilityPanel');
+            const closePanelBtn = document.getElementById('closeAccessibilityPanel');
+            const noEffectsCheckbox = document.getElementById('noEffectsCheckbox');
+            const themeBtns = document.querySelectorAll('[data-group="theme"] .option-btn');
+            const fontSizeBtns = document.querySelectorAll('[data-group="fontSize"] .option-btn');
+            const imageModeBtns = document.querySelectorAll('[data-group="imageMode"] .option-btn');
+            const userBlock = document.getElementById('userBlock');
+            const userAvatar = document.getElementById('userAvatar');
+            const userNameSpan = document.getElementById('userName');
+            const userRoleSpan = document.getElementById('userRole');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            let settings = {
+                theme: localStorage.getItem('a11y_theme') || 'original',
+                fontSize: localStorage.getItem('a11y_fontSize') || '1',
+                noEffects: localStorage.getItem('a11y_noEffects') === 'true',
+                imageMode: localStorage.getItem('a11y_imageMode') || 'original'
+            };
+
+            function applySettings() {
+                document.body.classList.remove('dark-theme', 'blue-theme');
+                if (settings.theme === 'dark') document.body.classList.add('dark-theme');
+                else if (settings.theme === 'blue') document.body.classList.add('blue-theme');
+                document.documentElement.classList.remove('font-size-1', 'font-size-2', 'font-size-3', 'font-size-4');
+                document.documentElement.classList.add('font-size-' + settings.fontSize);
+                if (settings.noEffects) document.body.classList.add('no-effects');
+                else document.body.classList.remove('no-effects');
+                document.body.classList.remove('images-grayscale', 'images-hide');
+                if (settings.imageMode === 'grayscale') document.body.classList.add('images-grayscale');
+                else if (settings.imageMode === 'hide') document.body.classList.add('images-hide');
+                updatePanelButtons();
+                if (noEffectsCheckbox) noEffectsCheckbox.checked = settings.noEffects;
+            }
+
+            function updatePanelButtons() {
+                themeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.theme));
+                fontSizeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.fontSize));
+                imageModeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.imageMode));
+            }
+
+            function saveSettings() {
+                localStorage.setItem('a11y_theme', settings.theme);
+                localStorage.setItem('a11y_fontSize', settings.fontSize);
+                localStorage.setItem('a11y_noEffects', settings.noEffects);
+                localStorage.setItem('a11y_imageMode', settings.imageMode);
+            }
+
+            themeBtns.forEach(btn => btn.addEventListener('click', () => { settings.theme = btn.dataset.value; saveSettings(); applySettings(); }));
+            fontSizeBtns.forEach(btn => btn.addEventListener('click', () => { settings.fontSize = btn.dataset.value; saveSettings(); applySettings(); }));
+            imageModeBtns.forEach(btn => btn.addEventListener('click', () => { settings.imageMode = btn.dataset.value; saveSettings(); applySettings(); }));
+            if (noEffectsCheckbox) noEffectsCheckbox.addEventListener('change', () => { settings.noEffects = noEffectsCheckbox.checked; saveSettings(); applySettings(); });
+
+            function togglePanel() {
+                panel.classList.toggle('active');
+                if (accessibilityBtn) accessibilityBtn.classList.toggle('active-icon', panel.classList.contains('active'));
+            }
+            accessibilityBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePanel(); });
+            closePanelBtn.addEventListener('click', () => { panel.classList.remove('active'); accessibilityBtn.classList.remove('active-icon'); });
+            document.addEventListener('click', (e) => {
+                if (panel && !panel.contains(e.target) && e.target !== accessibilityBtn) {
+                    panel.classList.remove('active');
+                    accessibilityBtn.classList.remove('active-icon');
+                }
+            });
+
+            applySettings();
+
+            // Авторизация
+            const API_URL = (() => {
+                if (window.location.protocol.startsWith('http')) {
+                    const host = window.location.hostname || '127.0.0.1';
+                    return `${window.location.protocol}//${host}:5000`;
+                }
+                return 'http://127.0.0.1:5000';
+            })();
+
+            const isAuth = localStorage.getItem('auth') === 'true';
+            const savedLogin = localStorage.getItem('login');
+            let savedRole = localStorage.getItem('role') || 'Ученик';
+            let savedFullName = localStorage.getItem('full_name') || savedLogin;
+            let savedAvatarColor = localStorage.getItem('avatar_color') || null;
+            let savedProfilePhoto = localStorage.getItem('profile_photo') || '';
+
+            function getInitials(name) { return name ? name.charAt(0).toUpperCase() : '?'; }
+            function getDefaultAvatarColor(name) {
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                const colors = [
+                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+                ];
+                return colors[Math.abs(hash) % colors.length];
+            }
+
+            function setAvatarElement(el, name, color, photo) {
+                if (!el) return;
+                if (photo) {
+                    el.style.background = 'transparent';
+                    el.style.backgroundImage = `url(${photo})`;
+                    el.style.backgroundSize = 'cover';
+                    el.style.backgroundPosition = 'center';
+                    el.textContent = '';
+                } else {
+                    el.style.backgroundImage = '';
+                    el.style.background = color || getDefaultAvatarColor(name || savedLogin);
+                    el.textContent = getInitials(name || savedLogin);
+                }
+            }
+
+            function updateUserInterface() {
+                if (isAuth && savedLogin) {
+                    if (userBlock) userBlock.style.display = 'flex';
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                    const displayName = savedFullName || savedLogin;
+                    const avatarColor = savedAvatarColor || getDefaultAvatarColor(displayName);
+                    setAvatarElement(userAvatar, displayName, avatarColor, savedProfilePhoto);
+                    if (userNameSpan) userNameSpan.textContent = displayName;
+                    if (userRoleSpan) userRoleSpan.textContent = savedRole;
+                } else {
+                    if (userBlock) userBlock.style.display = 'none';
+                    if (loginBtn) loginBtn.style.display = 'inline-block';
+                    if (logoutBtn) logoutBtn.style.display = 'none';
+                }
+            }
+
+            async function loadHeaderUserInfo() {
+                if (!isAuth || !savedLogin) return;
+                updateUserInterface();
+                try {
+                    const response = await fetch(`${API_URL}/api/user_info?login=${encodeURIComponent(savedLogin)}`, { mode: 'cors' });
+                    const data = await response.json();
+                    if (data.success && data.user) {
+                        savedRole = data.user.role || savedRole;
+                        savedFullName = data.user.full_name || savedFullName || savedLogin;
+                        savedAvatarColor = data.user.avatar_color || savedAvatarColor;
+                        savedProfilePhoto = data.user.profile_photo || savedProfilePhoto || '';
+
+                        localStorage.setItem('role', savedRole);
+                        localStorage.setItem('full_name', savedFullName);
+                        if (savedAvatarColor) localStorage.setItem('avatar_color', savedAvatarColor);
+                        if (savedProfilePhoto) localStorage.setItem('profile_photo', savedProfilePhoto);
+                        else localStorage.removeItem('profile_photo');
+
+                        updateUserInterface();
+                    }
+                } catch (err) {
+                    console.error('Не удалось загрузить фото профиля:', err);
+                }
+            }
+
+            loadHeaderUserInfo();
+            if (userBlock) userBlock.onclick = () => { if (isAuth && savedLogin) window.location.href = 'lk.html'; };
+            if (loginBtn) loginBtn.onclick = () => { window.location.href = 'login.html'; };
+            if (logoutBtn) logoutBtn.onclick = () => {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    localStorage.removeItem('auth');
+                    localStorage.removeItem('login');
+                    localStorage.removeItem('password');
+                    localStorage.removeItem('role');
+                    localStorage.removeItem('full_name');
+                    localStorage.removeItem('avatar_color');
+                    localStorage.removeItem('profile_photo');
+                    location.reload();
+                }
+            };
+        }
+
+        // ----- ПЛАВНАЯ ПРОКРУТКА ПО НАВИГАЦИИ -----
+        document.querySelectorAll('.info-nav-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    document.querySelectorAll('.info-nav-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Подсветка активного раздела при скролле
+        const sections = document.querySelectorAll('.info-block[id]');
+        const navBtns = document.querySelectorAll('.info-nav-btn');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(sec => {
+                if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
+            });
+            navBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('href') === '#' + current);
+            });
+        });
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,3497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Личный кабинет</title>
+<link rel="icon" type="image/png" href="logo1.png">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<link rel="stylesheet" href="footer.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html {
+    font-size: 16px;
+    transition: font-size 0.2s;
+}
+
+body {
+    font-family:'Raleway',sans-serif;
+    background:#eef2f7;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    transition:background-color 0.3s,color 0.3s;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(270deg, #2ea3d0, #3a5fa0, #2ea3d0);
+    background-size: 400% 400%;
+    animation: gradientMove 8s ease infinite;
+    color: white;
+    padding: 20px 0;
+    transition: background 0.3s;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.logo img {
+    width: 80px;
+    transition: filter 0.3s;
+}
+
+.title {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.title h1 {
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.title p {
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.header-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    position: relative;
+}
+
+.user-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.user-block:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.user-name {
+    font-weight: 800;
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    opacity: 0.85;
+    line-height: 1.2;
+}
+
+.header-icons > i {
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.header-icons > i.active-icon {
+    color: #ffd966;
+}
+
+.accessibility-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    padding: 30px;
+    z-index: 1000;
+    width: 480px;
+    margin-top: 10px;
+    color: #333;
+    font-family: 'Raleway', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.accessibility-panel.active {
+    display: block;
+}
+
+.accessibility-panel h4 {
+    margin-bottom: 10px;
+    font-weight: 800;
+    font-size: 1.125rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.accessibility-panel .option-group {
+    margin-bottom: 20px;
+}
+
+.option-group label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+}
+
+.option-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.option-btn {
+    padding: 6px 14px;
+    border: 2px solid #ccc;
+    background: #f8f8f8;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    font-family: 'Raleway', sans-serif;
+}
+
+.option-btn.active {
+    background: #2ea3d0;
+    color: white;
+    border-color: #2ea3d0;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    font-size: 0.95rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.close-panel {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+    font-family: 'Raleway', sans-serif;
+}
+
+.close-panel:hover {
+    color: #000;
+}
+
+/* NAV */
+.nav {
+    margin-top: 25px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Raleway', sans-serif;
+}
+
+.menu {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    position: relative;
+}
+
+.menu > li > a {
+    text-decoration: none;
+    font-weight: 800;
+    color: black;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 8px;
+    transition: 0.2s;
+    font-size: 1rem;
+}
+
+.menu > li > a:hover {
+    background: #2ea3d0;
+    color: white;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    min-width: 180px;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 10;
+    list-style: none;
+    padding: 0;
+}
+
+.menu li:hover .dropdown {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.dropdown li {
+    list-style: none;
+}
+
+.dropdown a {
+    display: block;
+    padding: 12px 15px;
+    font-weight: 700;
+    color: black;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+    font-size: 0.95rem;
+}
+
+.dropdown a:hover {
+    background: #2ea3d0;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    display:flex;
+    min-height:calc(100vh - 100px);
+    flex:1;
+}
+
+.sidebar {
+    width:240px;
+    background: linear-gradient(270deg, #2ea3d0, #3a5fa0, #2ea3d0);
+    background-size: 400% 400%;
+    animation: gradientMove 8s ease infinite;
+    padding:25px 15px;
+    color:white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar h3 {
+    margin-bottom:25px;
+    font-size:1.1rem;
+    font-weight:700;
+    padding:0 10px;
+    opacity:0.9;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.sidebar a {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 15px;
+    border-radius:12px;
+    margin-bottom:8px;
+    text-decoration:none;
+    color:white;
+    transition:0.3s;
+    font-weight:500;
+    font-size:0.95rem;
+}
+
+.sidebar a i {
+    width:20px;
+    font-size:1rem;
+}
+
+.sidebar a:hover {
+    background:rgba(255,255,255,0.15);
+    transform:translateX(5px);
+}
+
+.sidebar a.active {
+    background:white;
+    color:#3a5fa0 !important;
+    font-weight:700;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.sidebar a.active i {
+    color:#3a5fa0;
+}
+
+.content {
+    flex:1;
+    padding:25px;
+    background:#f5f7fa;
+    transition:background-color 0.3s,color 0.3s;
+    min-width: 0;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Обновленные контролы для Дневника */
+#tab-diary .controls {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+#tab-diary .controls .week-label {
+    font-weight:700;
+    font-size: 1.2rem;
+    color:#333;
+    background:white;
+    padding: 10px 25px;
+    border-radius: 12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    min-width: 250px;
+    text-align: center;
+}
+
+/* Дневник: дни друг под другом */
+#diary {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 100%;
+    margin: 0;
+}
+
+.day {
+    width: 100%;
+    background:white;
+    border-radius:16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    overflow:hidden;
+    transition:0.2s;
+    border: 2px solid #e8ecff;
+}
+
+.day:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    transform:translateY(-2px);
+}
+
+.day-title {
+    background:linear-gradient(135deg,#4c6ef5,#3b5de7);
+    color:white;
+    padding:15px;
+    font-weight:700;
+    text-align:center;
+    font-size:1.1rem;
+}
+
+.day-name {
+    display:block;
+    font-size:0.8rem;
+    opacity:0.85;
+    margin-top:3px;
+    font-weight:500;
+}
+
+/* Таблица дневника */
+#diary table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+#diary table th {
+    background: #f5f7fa;
+    padding: 12px 10px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666;
+    border-bottom: 2px solid #e0e5f7;
+    font-weight: 700;
+}
+
+#diary table td {
+    padding: 12px 10px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+    min-height: 48px;
+    height: 48px;
+}
+
+#diary table tr:last-child td {
+    border-bottom: none;
+}
+
+#diary table tr:hover {
+    background: #fafbfc;
+    cursor: pointer;
+}
+
+.subject {
+    color:#364fc7;
+    font-weight:700;
+}
+
+.marks-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    height: 100%;
+    min-height: 48px;
+}
+
+.diary-marks-cell {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: unset;
+    align-items: center;
+    justify-content: center;
+}
+
+.diary-marks-cell .mark-segment {
+    min-width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex: unset;
+    font-size: 0.95rem;
+}
+
+.mark {
+    padding:5px 9px;
+    border-radius:8px;
+    margin-right:4px;
+    font-weight:700;
+    font-size:0.85rem;
+    display:inline-block;
+}
+
+.mark-5 { background:#51cf66; color:white; }
+.mark-4 { background:#339af0; color:white; }
+.mark-3 { background:#fcc419; color:#333; }
+.mark-2 { background:#ff6b6b; color:white; }
+
+/* REPORT */
+.report-wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+.report-scroll {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+#reportTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+#reportTable th {
+    background: #4c6ef5;
+    color: white;
+    padding: 14px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid #3b5de7;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+#reportTable th:first-child {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: #3b5de7;
+}
+
+#reportTable th:last-child {
+    background: #3b5de7;
+}
+
+#reportTable td {
+    padding: 0;
+    font-size: 0.85rem;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    min-width: 60px;
+    height: 48px;
+}
+
+#reportTable td:first-child {
+    text-align: left;
+    font-weight: 600;
+    padding: 12px 15px;
+    background: #fafbfc;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 150px;
+    color: #333;
+}
+
+#reportTable td:last-child {
+    font-weight: 700;
+    background: #f8f9ff;
+    color: #2c3e50;
+    min-width: 100px;
+}
+
+#reportTable tr:hover td {
+    filter: brightness(0.97);
+}
+
+#reportTable tr:hover td:first-child {
+    background: #f0f2f5;
+}
+
+.marks-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    height: 100%;
+    min-height: 48px;
+}
+
+.mark-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex: 1;
+    min-width: 30px;
+    padding: 4px 6px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.mark-segment:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 4px;
+}
+
+.mark-bg-5 { background: #c8f7c5; color: #1b5e20; }
+.mark-bg-4 { background: #bbdefb; color: #0d47a1; }
+.mark-bg-3 { background: #fff9c4; color: #f57f17; }
+.mark-bg-2 { background: #ffcdd2; color: #b71c1c; }
+
+.empty-cell {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.report-summary {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    flex: 1;
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.summary-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.summary-info h4 {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.summary-info p {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* CHAT */
+.chat {
+    display:flex;
+    height:75vh;
+    background:white;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.dialogs-panel {
+    width:280px;
+    border-right:1px solid #eee;
+    display:flex;
+    flex-direction:column;
+}
+
+.dialogs-header {
+    padding:20px 15px;
+    border-bottom:1px solid #eee;
+    font-weight:700;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:1.1rem;
+}
+
+.dialogs-header button {
+    background:#4c6ef5;
+    border:none;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.2s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.dialogs-header button:hover {
+    background: #3b5de7;
+    transform: scale(1.05);
+}
+
+.dialogs {
+    overflow-y:auto;
+    flex:1;
+}
+
+.dialog {
+    padding:15px;
+    cursor:pointer;
+    border-bottom:1px solid #f0f0f0;
+    transition:0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dialog:hover {
+    background:#f8f9fa;
+}
+
+.dialog.active {
+    background:#e7f0ff;
+    border-left: 3px solid #4c6ef5;
+}
+
+.dialog-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.dialog-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dialog-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dialog-name {
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-size: 0.95rem;
+}
+
+.dialog-preview {
+    font-size: 0.8rem;
+    color: #888;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-window {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+
+.chat-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chat-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.chat-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chat-user-info {
+    flex: 1;
+}
+
+.chat-username {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.chat-role {
+    font-size: 0.85rem;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.role-badge {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.role-Учитель { background: #ffe0e0; color: #d32f2f; }
+.role-Ученик { background: #e0f0ff; color: #1976d2; }
+.role-Администратор { background: #fff3e0; color: #f57c00; }
+.role-Родитель { background: #e8f5e9; color: #388e3c; }
+
+.messages {
+    flex:1;
+    padding:20px;
+    overflow-y:auto;
+    background:#f5f6fa;
+}
+
+.message-wrapper {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.message-wrapper.me {
+    justify-content: flex-end;
+}
+
+.message-wrapper.other {
+    justify-content: flex-start;
+}
+
+.message {
+    max-width:65%;
+    padding:12px 16px;
+    border-radius:18px;
+    position: relative;
+    word-wrap: break-word;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.me-message {
+    background: linear-gradient(135deg, #4c6ef5, #3b5de7);
+    color: white;
+    border-bottom-right-radius: 4px;
+    margin-left: 50px;
+}
+
+.other-message {
+    background: white;
+    border: 1px solid #e8e8e8;
+    border-bottom-left-radius: 4px;
+    margin-right: 50px;
+}
+
+.message-text {
+    margin-bottom: 6px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.message-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: 0.7rem;
+}
+
+.me-message .message-footer {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.other-message .message-footer {
+    color: #999;
+}
+
+.message-status {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.status-check {
+    font-size: 0.65rem;
+}
+
+.me-message .status-check.sent {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.me-message .status-check.read {
+    color: #4fc3f7;
+}
+
+.input {
+    display:flex;
+    border-top:1px solid #eee;
+    background:white;
+    padding:10px;
+}
+
+.input input {
+    flex:1;
+    padding:12px 15px;
+    border:1px solid #e0e0e0;
+    border-radius:25px;
+    outline:none;
+    font-size:0.95rem;
+    margin-right:10px;
+    transition:0.2s;
+    font-family:'Raleway',sans-serif;
+}
+
+.input input:focus {
+    border-color:#4c6ef5;
+}
+
+.system-message {
+    text-align: center;
+    margin: 20px 0;
+    color: #999;
+    font-size: 0.8rem;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index:1000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    overflow:auto;
+    background:rgba(0,0,0,0.4);
+    animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background:white;
+    margin:5% auto;
+    padding:25px;
+    border-radius:16px;
+    width:520px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-content h3 {
+    margin-bottom:20px;
+    font-size:1.2rem;
+    color:#333;
+}
+
+.modal-content input, .modal-content textarea, .modal-content select {
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-family:inherit;
+    font-size:0.95rem;
+    transition:0.2s;
+}
+
+.modal-content input[type="file"] {
+    padding: 8px;
+}
+
+.modal-buttons {
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:10px;
+}
+
+.modal-buttons button {
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:0.9rem;
+    transition:0.2s;
+    font-family:'Raleway',sans-serif;
+}
+
+.btn-primary {
+    background:#4c6ef5;
+    color:white;
+}
+
+.btn-primary:hover {
+    background:#3b5de7;
+}
+
+.btn-cancel {
+    background:#f0f0f0;
+    color:#666;
+}
+
+.btn-cancel:hover {
+    background:#e0e0e0;
+}
+
+.btn-danger {
+    background: #ff6b6b;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #e55555;
+}
+
+/* CROPPER */
+.cropper-container {
+    margin: 15px 0;
+    max-height: 350px;
+}
+
+.cropper-preview-box {
+    display: flex;
+    gap: 20px;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.cropper-preview-wrap {
+    text-align: center;
+}
+
+.cropper-preview-wrap label {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.cropper-preview-sm {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ddd;
+}
+
+.cropper-preview-lg {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ddd;
+}
+
+/* ANNOUNCEMENTS */
+.announcements-list {
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.announcement-card {
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    border-left:4px solid #4c6ef5;
+    transition:0.2s;
+}
+
+.announcement-card:hover {
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    transform:translateY(-1px);
+}
+
+.announcement-title {
+    font-weight:700;
+    font-size:1.1rem;
+    color:#333;
+    margin-bottom:8px;
+}
+
+.announcement-date {
+    font-size:0.8rem;
+    color:#888;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.announcement-text {
+    color:#555;
+    line-height:1.5;
+}
+
+.announcement-author {
+    font-size:0.8rem;
+    color:#4c6ef5;
+    font-weight:600;
+}
+
+.loading {
+    text-align: center;
+    padding: 50px;
+    color: #888;
+}
+
+.error-message {
+    text-align: center;
+    padding: 30px;
+    color: #ff6b6b;
+    background: #fff0f0;
+    border-radius: 12px;
+    margin: 10px 0;
+}
+
+/* AVATAR COLORS */
+.avatar-colors {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.avatar-color-option {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.avatar-color-option:hover {
+    transform: scale(1.1);
+}
+
+.avatar-color-option.active {
+    border-color: #333;
+}
+
+/* DARK THEME */
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-theme .header {
+    background: linear-gradient(270deg, #0f3b47, #1a2b5e, #0f3b47);
+    background-size: 400% 400%;
+    animation: gradientMove 8s ease infinite;
+}
+
+body.dark-theme .nav {
+    background: #1e1e1e;
+}
+
+body.dark-theme .menu > li > a {
+    color: #e0e0e0;
+}
+
+body.dark-theme .menu > li > a:hover {
+    background: #3a506b;
+    color: white;
+}
+
+body.dark-theme .dropdown {
+    background: #2a2a2a;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+body.dark-theme .dropdown a {
+    color: #e0e0e0;
+}
+
+body.dark-theme .dropdown a:hover {
+    background: #3a506b;
+    color: white;
+}
+
+body.dark-theme .content {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-theme .accessibility-panel {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+body.dark-theme .option-btn {
+    background: #3a3a3a;
+    border-color: #555;
+    color: #ccc;
+}
+
+body.dark-theme .option-btn.active {
+    background: #2ea3d0;
+    color: white;
+    border-color: #2ea3d0;
+}
+
+body.dark-theme .close-panel {
+    color: #aaa;
+}
+
+body.dark-theme .close-panel:hover {
+    color: white;
+}
+
+body.dark-theme .checkbox-group {
+    color: #e0e0e0;
+}
+
+body.dark-theme .styled-select {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-theme .styled-select option {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+
+body.dark-theme .custom-period {
+    background: #1e1e1e;
+}
+
+body.dark-theme .report-scroll {
+    background: #1e1e1e;
+}
+
+body.dark-theme #reportTable td {
+    border-color: #333;
+}
+
+body.dark-theme #reportTable td:first-child {
+    background: #252525;
+    color: #e0e0e0;
+}
+
+body.dark-theme #reportTable td:last-child {
+    background: #1a1a2e;
+    color: #e0e0e0;
+}
+
+body.dark-theme #reportTable tr:hover td:first-child {
+    background: #2a2a2a;
+}
+
+body.dark-theme .summary-card {
+    background: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.dark-theme .summary-info h4 {
+    color: #aaa;
+}
+
+body.dark-theme .summary-info p {
+    color: #e0e0e0;
+}
+
+body.dark-theme .modal-content {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+
+body.dark-theme .avatar-color-option.active {
+    border-color: #fff;
+}
+
+/* BLUE THEME */
+body.blue-theme {
+    background-color: #d4eafc;
+    color: #000;
+}
+
+body.blue-theme .header {
+    background: linear-gradient(270deg, #1e88e5, #1565c0, #1e88e5);
+    background-size: 400% 400%;
+    animation: gradientMove 8s ease infinite;
+}
+
+body.blue-theme .nav {
+    background: #bbdefb;
+}
+
+body.blue-theme .menu > li > a {
+    color: #000;
+}
+
+body.blue-theme .menu > li > a:hover {
+    background: #1e88e5;
+    color: white;
+}
+
+body.blue-theme .dropdown {
+    background: #e3f2fd;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+body.blue-theme .dropdown a {
+    color: #000;
+}
+
+body.blue-theme .dropdown a:hover {
+    background: #1e88e5;
+    color: white;
+}
+
+body.blue-theme .content {
+    background-color: #d4eafc;
+    color: #0d47a1;
+}
+
+body.blue-theme .accessibility-panel {
+    background: #e3f2fd;
+    color: #0d47a1;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+body.blue-theme .option-btn {
+    background: #bbdefb;
+    border-color: #90caf9;
+    color: #0d47a1;
+}
+
+body.blue-theme .option-btn.active {
+    background: #1e88e5;
+    color: white;
+    border-color: #1e88e5;
+}
+
+body.blue-theme .close-panel {
+    color: #1565c0;
+}
+
+body.blue-theme .close-panel:hover {
+    color: #0d47a1;
+}
+
+body.blue-theme .checkbox-group {
+    color: #0d47a1;
+}
+
+/* NO EFFECTS */
+body.no-effects .header {
+    background: #2c3e50;
+    animation: none;
+}
+
+body.no-effects .sidebar {
+    background: #2c3e50;
+    animation: none;
+}
+
+body.dark-theme.no-effects .header {
+    background: #0d1b2a;
+}
+
+body.dark-theme.no-effects .sidebar {
+    background: #0d1b2a;
+}
+
+body.blue-theme.no-effects .header {
+    background: #1565c0;
+}
+
+body.blue-theme.no-effects .sidebar {
+    background: #1565c0;
+}
+
+/* =============================================
+   ДНЕВНИК — НОВЫЕ КОНТРОЛЫ НАВИГАЦИИ ПО НЕДЕЛЯМ
+   ============================================= */
+.diary-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.week-nav-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 2px solid #e0e5f7;
+    background: white;
+    color: #4c6ef5;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    font-family: 'Raleway', sans-serif;
+}
+
+.week-nav-btn:hover {
+    background: #4c6ef5;
+    color: white;
+    border-color: #4c6ef5;
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(76,110,245,0.3);
+}
+
+.week-nav-btn:active {
+    transform: scale(0.96);
+}
+
+.week-label-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 2px solid #e0e5f7;
+    border-radius: 14px;
+    padding: 10px 22px;
+    min-width: 270px;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(76,110,245,0.06);
+}
+
+.week-icon {
+    color: #4c6ef5;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.week-label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #333;
+    text-align: center;
+    min-width: 0;
+}
+
+.week-today-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 18px;
+    height: 42px;
+    border-radius: 12px;
+    border: 2px solid #4c6ef5;
+    background: transparent;
+    color: #4c6ef5;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: 'Raleway', sans-serif;
+}
+
+.week-today-btn:hover {
+    background: #4c6ef5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(76,110,245,0.3);
+}
+
+.week-today-btn:active {
+    transform: scale(0.97);
+}
+
+/* =============================================
+   УСПЕВАЕМОСТЬ — КНОПКИ ЧЕТВЕРТЕЙ
+   ============================================= */
+.grades-controls {
+    background: white;
+    border-radius: 18px;
+    padding: 22px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.period-label {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.period-label i {
+    color: #4c6ef5;
+}
+
+.quarter-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.quarter-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: 2px solid #e0e5f7;
+    background: #f8f9ff;
+    cursor: pointer;
+    transition: all 0.22s;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    flex: 1;
+    min-width: 150px;
+}
+
+.quarter-pill:hover {
+    border-color: #4c6ef5;
+    background: #eef1ff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(76,110,245,0.15);
+}
+
+.quarter-pill.active {
+    border-color: #4c6ef5;
+    background: linear-gradient(135deg, #4c6ef5, #3b5de7);
+    color: white;
+    box-shadow: 0 6px 20px rgba(76,110,245,0.35);
+    transform: translateY(-2px);
+}
+
+.quarter-pill:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.qpill-num {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #4c6ef5;
+    min-width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: color 0.22s;
+}
+
+.quarter-pill.active .qpill-num {
+    color: rgba(255,255,255,0.9);
+}
+
+.qpill-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.qpill-title {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #333;
+    transition: color 0.22s;
+    line-height: 1.2;
+}
+
+.qpill-dates {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 500;
+    transition: color 0.22s;
+    line-height: 1.2;
+}
+
+.quarter-pill.active .qpill-title,
+.quarter-pill.active .qpill-dates {
+    color: rgba(255,255,255,0.92);
+}
+
+.quarter-pill--custom .qpill-num {
+    font-size: 0.95rem;
+}
+
+/* Блок произвольного периода */
+.custom-period-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1.5px dashed #e0e5f7;
+    flex-wrap: wrap;
+    animation: fadeSlideIn 0.25s ease;
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.custom-date-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #666;
+    white-space: nowrap;
+}
+
+.date-input {
+    padding: 9px 12px;
+    border: 2px solid #e0e5f7;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: 'Raleway', sans-serif;
+    color: #333;
+    background: #f8f9ff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.date-input:focus {
+    border-color: #4c6ef5;
+    box-shadow: 0 0 0 3px rgba(76,110,245,0.12);
+    background: white;
+}
+
+.date-sep {
+    color: #aaa;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.show-report-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    background: #4c6ef5;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Raleway', sans-serif;
+    margin-left: 4px;
+}
+
+.show-report-btn:hover {
+    background: #3b5de7;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(76,110,245,0.3);
+}
+
+.show-report-btn:active {
+    transform: scale(0.97);
+}
+
+/* Заглушка до выбора периода */
+.grades-placeholder {
+    text-align: center;
+    padding: 70px 20px;
+    color: #c0c8e8;
+}
+
+.grades-placeholder i {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.grades-placeholder p {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Тёмная тема */
+body.dark-theme .week-nav-btn {
+    background: #2a2a2a;
+    border-color: #3a3a5e;
+    color: #7c97ff;
+}
+body.dark-theme .week-nav-btn:hover {
+    background: #4c6ef5;
+    color: white;
+    border-color: #4c6ef5;
+}
+body.dark-theme .week-label-wrap {
+    background: #1e1e1e;
+    border-color: #3a3a5e;
+}
+body.dark-theme .week-label { color: #e0e0e0; }
+body.dark-theme .week-today-btn {
+    border-color: #4c6ef5;
+    color: #7c97ff;
+    background: transparent;
+}
+body.dark-theme .week-today-btn:hover {
+    background: #4c6ef5;
+    color: white;
+}
+body.dark-theme .grades-controls {
+    background: #1e1e1e;
+}
+body.dark-theme .period-label { color: #e0e0e0; }
+body.dark-theme .quarter-pill {
+    background: #252525;
+    border-color: #3a3a5e;
+}
+body.dark-theme .quarter-pill:hover {
+    background: #2a2a4a;
+    border-color: #4c6ef5;
+}
+body.dark-theme .quarter-pill.active {
+    background: linear-gradient(135deg, #4c6ef5, #3b5de7);
+    border-color: #4c6ef5;
+}
+body.dark-theme .qpill-title { color: #e0e0e0; }
+body.dark-theme .qpill-dates { color: #888; }
+body.dark-theme .custom-period-row { border-top-color: #3a3a5e; }
+body.dark-theme .date-input {
+    background: #252525;
+    border-color: #3a3a5e;
+    color: #e0e0e0;
+}
+body.dark-theme .date-input:focus {
+    border-color: #4c6ef5;
+    background: #1e1e2e;
+}
+body.dark-theme .date-label { color: #aaa; }
+body.dark-theme .grades-placeholder { color: #3a3a5e; }
+
+/* Синяя тема */
+body.blue-theme .week-nav-btn {
+    background: #e3f2fd;
+    border-color: #90caf9;
+    color: #1565c0;
+}
+body.blue-theme .week-nav-btn:hover {
+    background: #1e88e5;
+    color: white;
+    border-color: #1e88e5;
+}
+body.blue-theme .week-label-wrap {
+    background: #e3f2fd;
+    border-color: #90caf9;
+}
+body.blue-theme .week-label { color: #0d47a1; }
+body.blue-theme .week-today-btn {
+    border-color: #1e88e5;
+    color: #1565c0;
+}
+body.blue-theme .week-today-btn:hover {
+    background: #1e88e5;
+    color: white;
+}
+body.blue-theme .grades-controls { background: #e3f2fd; }
+body.blue-theme .period-label { color: #0d47a1; }
+body.blue-theme .period-label i { color: #1e88e5; }
+body.blue-theme .quarter-pill {
+    background: #bbdefb;
+    border-color: #90caf9;
+}
+body.blue-theme .quarter-pill:hover {
+    border-color: #1e88e5;
+    background: #e3f2fd;
+}
+body.blue-theme .quarter-pill.active {
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+    border-color: #1565c0;
+}
+body.blue-theme .qpill-num { color: #1565c0; }
+body.blue-theme .qpill-title { color: #0d47a1; }
+body.blue-theme .date-input {
+    background: #e3f2fd;
+    border-color: #90caf9;
+    color: #0d47a1;
+}
+body.blue-theme .show-report-btn { background: #1e88e5; }
+body.blue-theme .show-report-btn:hover { background: #1565c0; }
+
+/* ANNOUNCEMENTS — кнопка обновить */
+.announcements-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 18px;
+}
+
+.ann-refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    height: 42px;
+    border-radius: 12px;
+    border: 2px solid #4c6ef5;
+    background: transparent;
+    color: #4c6ef5;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Raleway', sans-serif;
+}
+
+.ann-refresh-btn:hover {
+    background: #4c6ef5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(76,110,245,0.3);
+    transform: translateY(-1px);
+}
+
+.ann-refresh-btn:hover i {
+    animation: spin-once 0.5s ease;
+}
+
+.ann-refresh-btn:active {
+    transform: scale(0.97);
+}
+
+@keyframes spin-once {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+body.dark-theme .ann-refresh-btn {
+    border-color: #4c6ef5;
+    color: #7c97ff;
+}
+body.dark-theme .ann-refresh-btn:hover {
+    background: #4c6ef5;
+    color: white;
+}
+
+body.blue-theme .ann-refresh-btn {
+    border-color: #1e88e5;
+    color: #1565c0;
+}
+body.blue-theme .ann-refresh-btn:hover {
+    background: #1e88e5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(30,136,229,0.3);
+}
+
+/* RESPONSIVE */
+@media (max-width:768px) {
+    .diary-controls { gap: 8px; }
+    .week-label-wrap { min-width: 0; flex: 1; padding: 10px 14px; }
+    .week-label { font-size: 0.85rem; }
+    .week-today-btn { padding: 0 12px; font-size: 0.82rem; }
+    .quarter-pills { gap: 8px; }
+    .quarter-pill { min-width: 130px; padding: 10px 12px; gap: 8px; }
+    .custom-period-row { gap: 8px; }
+    .date-input { font-size: 0.82rem; padding: 8px 10px; }
+    .sidebar {
+        width:80px;
+    }
+    .sidebar a span {
+        display:none;
+    }
+    .sidebar a {
+        justify-content:center;
+        padding:14px;
+    }
+    .sidebar a i {
+        margin:0;
+    }
+    .sidebar h3 {
+        display:none;
+    }
+    .dialogs-panel {
+        width:100px;
+    }
+    .dialog-info {
+        display:none;
+    }
+    .accessibility-panel {
+        width: 90vw;
+        right: -10px;
+        padding: 20px;
+    }
+    .user-block .user-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    .user-info {
+        display: none;
+    }
+}
+
+/* === ПОПАП ДЕТАЛЕЙ ОЦЕНКИ === */
+.mark-modal-content {
+    max-width: 380px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+.mark-modal-close {
+    position: absolute; top: 12px; right: 14px;
+    width: 30px; height: 30px; border: none;
+    background: rgba(0,0,0,0.08); border-radius: 50%;
+    cursor: pointer; font-size: 0.95rem; color: #555;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; z-index: 10;
+}
+.mark-modal-close:hover { background: rgba(0,0,0,0.15); }
+.mark-modal-header {
+    display: flex; align-items: center; gap: 18px;
+    padding: 22px 22px 16px; border-bottom: 1px solid #f0f0f0;
+}
+.mark-modal-badge {
+    width: 56px; height: 56px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.7rem; font-weight: 800; color: white; flex-shrink: 0;
+}
+.mark-badge-5 { background: linear-gradient(135deg, #51cf66, #2f9e44); }
+.mark-badge-4 { background: linear-gradient(135deg, #339af0, #1971c2); }
+.mark-badge-3 { background: linear-gradient(135deg, #fcc419, #f59f00); color: #333 !important; }
+.mark-badge-2 { background: linear-gradient(135deg, #ff6b6b, #e03131); }
+.mark-modal-subject { font-weight: 800; font-size: 1.05rem; color: #222; line-height: 1.3; margin-bottom: 3px; }
+.mark-modal-type { font-size: 0.82rem; color: #888; font-weight: 600; }
+.mark-modal-title-block { flex: 1; min-width: 0; }
+.mark-modal-rows { padding: 14px 22px 20px; display: flex; flex-direction: column; gap: 10px; }
+.mark-modal-row { display: flex; align-items: flex-start; gap: 12px; }
+.mark-modal-row-icon {
+    width: 32px; height: 32px; border-radius: 8px; background: #f1f3f5;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; color: #4c6ef5; flex-shrink: 0; margin-top: 1px;
+}
+.mark-modal-row-label { font-size: 0.72rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+.mark-modal-row-value { font-size: 0.92rem; font-weight: 600; color: #333; }
+.mark.clickable { cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+.mark.clickable:hover { transform: scale(1.18); box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
+
+body.dark-theme .mark-modal-header { border-bottom-color: #333; }
+body.dark-theme .mark-modal-subject { color: #e0e0e0; }
+body.dark-theme .mark-modal-row-icon { background: #2a2a2a; }
+body.dark-theme .mark-modal-row-value { color: #e0e0e0; }
+body.dark-theme .mark-modal-close { background: rgba(255,255,255,0.08); color: #aaa; }
+
+/* === ПРОФИЛЬ: ПРЕВЬЮ + ЖИВОТНЫЕ === */
+.profile-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #f8f9ff;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    border: 1.5px solid #e8ecff;
+}
+.profile-preview-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+    border: 3px solid rgba(255,255,255,0.6);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    transition: all 0.25s;
+}
+.profile-preview-name {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #222;
+    margin-bottom: 2px;
+}
+.profile-preview-role {
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: 600;
+}
+.profile-preview-circle { overflow: hidden; background-size: cover; background-position: center; }
+.profile-preview-circle img { width: 100%; height: 100%; object-fit: cover; }
+.profile-preview-circle.has-photo,
+.user-avatar.has-photo,
+.dialog-avatar.has-photo,
+.chat-avatar.has-photo {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    color: transparent !important;
+}
+.profile-photo-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 18px; }
+.profile-photo-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; border: 2px solid #4c6ef5; background: #4c6ef5; color: #fff; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s; font-family: 'Raleway', sans-serif; }
+.profile-photo-btn:hover { background: #3b5de7; border-color: #3b5de7; transform: translateY(-1px); }
+.profile-photo-remove { background: transparent; color: #ff6b6b; border-color: #ffb8b8; }
+.profile-photo-remove:hover { background: #fff0f0; color: #e55555; border-color: #ff8f8f; }
+.crop-modal-content { width: min(760px, 94vw); }
+.crop-area { width: 100%; max-height: 430px; background: #f5f7fa; border: 2px dashed #d8def7; border-radius: 14px; overflow: hidden; margin: 12px 0 18px; }
+.crop-area img { display: block; max-width: 100%; max-height: 430px; }
+.crop-help { color: #777; font-size: 0.9rem; line-height: 1.45; margin-bottom: 12px; }
+.cropper-preview-box { display: flex; gap: 22px; align-items: center; margin: 14px 0 18px; flex-wrap: wrap; }
+.cropper-preview-wrap { text-align: center; }
+.cropper-preview-wrap label { display: block; font-size: 0.82rem; color: #777; font-weight: 700; margin-bottom: 7px; }
+.cropper-preview-sm, .cropper-preview-lg { border-radius: 50%; overflow: hidden; border: 3px solid #e0e5f7; background: #fff; }
+.cropper-preview-sm { width: 56px; height: 56px; }
+.cropper-preview-lg { width: 112px; height: 112px; }
+body.dark-theme .crop-area { background: #1e1e1e; border-color: #3a3a5e; }
+body.dark-theme .crop-help, body.dark-theme .cropper-preview-wrap label { color: #aaa; }
+body.dark-theme .cropper-preview-sm, body.dark-theme .cropper-preview-lg { background: #252525; border-color: #3a3a5e; }
+body.dark-theme .profile-photo-remove:hover { background: rgba(255,107,107,0.12); }
+
+/* Тёмная тема */
+body.dark-theme .profile-preview-row { background: #252535; border-color: #3a3a5e; }
+body.dark-theme .profile-preview-name { color: #e0e0e0; }
+
+
+
+/* === ДОРАБОТКА: левое меню закреплено слева, контент выровнен по тексту верхней навигации === */
+:root {
+    --lk-sidebar-width: 240px;
+    --lk-content-left-offset: 25px;
+    --lk-content-width: min(90vw, 1200px);
+}
+
+.main {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.sidebar {
+    flex: 0 0 var(--lk-sidebar-width);
+    width: var(--lk-sidebar-width);
+    align-self: stretch;
+    min-height: calc(100vh - 140px);
+    position: sticky;
+    top: 0;
+    left: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+.content {
+    flex: 1;
+    min-width: 0;
+    padding: 25px 0 45px;
+    overflow-x: hidden;
+}
+
+.content > .tab-content.active {
+    width: var(--lk-content-width);
+    max-width: calc(100vw - var(--lk-sidebar-width) - var(--lk-content-left-offset) - 16px);
+    margin-left: var(--lk-content-left-offset);
+    margin-right: auto;
+}
+
+.week-select {
+    min-width: 280px;
+    max-width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    appearance: auto;
+}
+
+body.dark-theme .week-select { color: #e0e0e0; background: #1e1e1e; }
+body.blue-theme .week-select { color: #0d47a1; }
+
+#diary,
+.day,
+.grades-controls,
+.report-wrapper,
+.report-scroll,
+.chat,
+.announcements-controls,
+.announcements-list {
+    width: 100%;
+    max-width: 100%;
+}
+
+#reportTable {
+    width: 100%;
+}
+
+/* Цвет итоговой оценки за четверть/период */
+.avg-score {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 58px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-weight: 800;
+}
+.avg-score-red { background: #ffcdd2; color: #b71c1c; }
+.avg-score-yellow { background: #fff9c4; color: #f57f17; }
+.avg-score-blue { background: #bbdefb; color: #0d47a1; }
+.avg-score-green { background: #c8f7c5; color: #1b5e20; }
+
+body.dark-theme .avg-score-red { background: rgba(255, 107, 107, 0.22); color: #ff8a8a; }
+body.dark-theme .avg-score-yellow { background: rgba(252, 196, 25, 0.22); color: #ffd43b; }
+body.dark-theme .avg-score-blue { background: rgba(51, 154, 240, 0.22); color: #74c0fc; }
+body.dark-theme .avg-score-green { background: rgba(81, 207, 102, 0.22); color: #8ce99a; }
+
+@media (max-width: 768px) {
+    :root {
+        --lk-sidebar-width: 80px;
+        --lk-content-left-offset: 14px;
+    }
+
+    .content { padding: 18px 0 35px; }
+
+    .content > .tab-content.active {
+        max-width: calc(100vw - var(--lk-sidebar-width) - var(--lk-content-left-offset) - 12px);
+    }
+
+    .week-select {
+        min-width: 0;
+        width: 100%;
+        font-size: 0.85rem;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<div class="main">
+<div class="sidebar">
+<h3>Навигация</h3>
+<a href="#" class="active" data-tab="diary"><i class="fa-solid fa-book"></i><span>Дневник</span></a>
+<a href="#" data-tab="grades"><i class="fa-solid fa-chart-line"></i><span>Успеваемость</span></a>
+<a href="#" data-tab="messages"><i class="fa-solid fa-comments"></i><span>Сообщения</span></a>
+<a href="#" data-tab="announcements"><i class="fa-solid fa-bullhorn"></i><span>Объявления</span></a>
+</div>
+
+<div class="content">
+
+<div class="tab-content active" id="tab-diary">
+    <div class="diary-controls">
+        <button class="week-nav-btn" onclick="prevWeek()" title="Предыдущая неделя">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="week-label-wrap">
+            <span class="week-icon"><i class="fa-solid fa-calendar-week"></i></span>
+            <select class="week-select" id="weekSelect" aria-label="Выбор недели учебного периода"></select>
+            <span class="week-label" id="weekLabel" style="display:none;"></span>
+        </div>
+        <button class="week-nav-btn" onclick="nextWeek()" title="Следующая неделя">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button class="week-today-btn" onclick="currentWeek()" title="Текущая неделя">
+            Текущая неделя
+        </button>
+    </div>
+    <div id="diary"></div>
+</div>
+
+<div class="tab-content" id="tab-grades">
+    <div class="grades-controls">
+        <div class="period-label"><i class="fa-solid fa-chart-line"></i> Период успеваемости</div>
+        <div class="quarter-pills" id="quarterPills">
+            <button class="quarter-pill" data-value="quarter1" onclick="selectQuarter(this)">
+                <span class="qpill-num">I</span>
+                <span class="qpill-info">
+                    <span class="qpill-title">1 четверть</span>
+                    <span class="qpill-dates">01.09 – 24.10.2025</span>
+                </span>
+            </button>
+            <button class="quarter-pill" data-value="quarter2" onclick="selectQuarter(this)">
+                <span class="qpill-num">II</span>
+                <span class="qpill-info">
+                    <span class="qpill-title">2 четверть</span>
+                    <span class="qpill-dates">25.10.2025 – 11.01.2026</span>
+                </span>
+            </button>
+            <button class="quarter-pill" data-value="quarter3" onclick="selectQuarter(this)">
+                <span class="qpill-num">III</span>
+                <span class="qpill-info">
+                    <span class="qpill-title">3 четверть</span>
+                    <span class="qpill-dates">12.01 – 05.04.2026</span>
+                </span>
+            </button>
+            <button class="quarter-pill" data-value="quarter4" onclick="selectQuarter(this)">
+                <span class="qpill-num">IV</span>
+                <span class="qpill-info">
+                    <span class="qpill-title">4 четверть</span>
+                    <span class="qpill-dates">06.04 – 31.05.2026</span>
+                </span>
+            </button>
+            <button class="quarter-pill quarter-pill--custom" data-value="custom" onclick="selectQuarter(this)">
+                <span class="qpill-num"><i class="fa-solid fa-sliders"></i></span>
+                <span class="qpill-info">
+                    <span class="qpill-title">Свой период</span>
+                    <span class="qpill-dates">Любые даты</span>
+                </span>
+            </button>
+        </div>
+
+        <div id="customPeriod" class="custom-period-row" style="display:none;">
+            <div class="custom-date-group">
+                <label class="date-label">С</label>
+                <input type="date" id="reportStart" class="date-input">
+            </div>
+            <div class="date-sep">—</div>
+            <div class="custom-date-group">
+                <label class="date-label">По</label>
+                <input type="date" id="reportEnd" class="date-input">
+            </div>
+            <button class="show-report-btn" onclick="loadReport()">
+                <i class="fa-solid fa-magnifying-glass-chart"></i> Показать
+            </button>
+        </div>
+    </div>
+    <div id="report">
+        <div class="grades-placeholder">
+            <i class="fa-solid fa-chart-line"></i>
+            <p>Выберите период выше</p>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="tab-messages">
+    <div class="chat">
+        <div class="dialogs-panel">
+            <div class="dialogs-header"><span>Диалоги</span><button id="newMsgBtn" title="Новое сообщение">+</button></div>
+            <div class="dialogs" id="dialogs"></div>
+        </div>
+        <div class="chat-window">
+            <div class="chat-header" id="chatHeader" style="display:none;">
+                <div class="chat-avatar" id="chatAvatar">?</div>
+                <div class="chat-user-info">
+                    <div class="chat-username" id="chatUsername">Выберите диалог</div>
+                    <div class="chat-role" id="chatRole">Роль не определена</div>
+                </div>
+            </div>
+            <div class="messages" id="messages"></div>
+            <div class="input" id="inputArea" style="display:none;">
+                <input type="text" id="msgInput" placeholder="Напишите сообщение...">
+                <button type="button" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+            <div id="noDialog" style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#bbb;">
+                <i class="fa-solid fa-comments" style="font-size:5rem;margin-bottom:20px;"></i>
+                <p style="font-size:1.2rem;">Выберите диалог</p>
+                <p style="font-size:0.9rem;margin-top:5px;">или начните новый</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="tab-announcements">
+    <div class="announcements-controls">
+        <button class="ann-refresh-btn" onclick="loadAnnouncements()">
+            <i class="fa-solid fa-rotate"></i> Обновить
+        </button>
+    </div>
+    <div class="announcements-list" id="announcementsList">
+        <div class="loading"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;color:#4c6ef5;"></i> Загрузка...</div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<div class="modal" id="newMessageModal">
+  <div class="modal-content">
+    <h3><i class="fa-solid fa-pen-to-square"></i> Новое сообщение</h3>
+    <input type="text" id="recipientLogin" placeholder="Логин получателя *" required>
+    <textarea id="newMessageText" rows="4" placeholder="Текст сообщения..." required></textarea>
+    <div class="modal-buttons">
+      <button type="button" class="btn-cancel" onclick="closeNewMsgModal()">Отмена</button>
+      <button type="button" class="btn-primary" onclick="sendNewMessage()"><i class="fa-solid fa-paper-plane"></i> Отправить</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="profileModal">
+  <div class="modal-content">
+    <h3><i class="fa-solid fa-user-gear"></i> Настройки профиля</h3>
+
+    <div class="profile-preview-row">
+        <div id="profileAvatarPreview" class="profile-preview-circle"></div>
+        <div class="profile-preview-info">
+            <div class="profile-preview-name" id="profilePreviewName"></div>
+            <div class="profile-preview-role" id="profilePreviewRoleLabel"></div>
+        </div>
+    </div>
+
+    <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
+    <div class="profile-photo-actions">
+      <button type="button" class="profile-photo-btn" id="uploadProfilePhotoBtn"><i class="fa-solid fa-camera"></i> Загрузить фото</button>
+      <button type="button" class="profile-photo-btn profile-photo-remove" id="removeProfilePhotoBtn"><i class="fa-solid fa-trash"></i> Удалить фото</button>
+    </div>
+
+    <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:8px;">Цвет профиля</label>
+    <div class="avatar-colors" id="avatarColors"></div>
+
+    <label style="font-weight:600;font-size:0.9rem;display:block;margin:14px 0 6px;">Роль</label>
+    <select id="profileRole">
+      <option value="Ученик">Ученик</option>
+      <option value="Учитель">Учитель</option>
+      <option value="Администратор">Администратор</option>
+      <option value="Родитель">Родитель</option>
+    </select>
+    <label style="font-weight:600;font-size:0.9rem;display:block;margin:10px 0 6px;">Полное имя</label>
+    <input type="text" id="profileFullName" placeholder="Иван Иванов">
+    <div class="modal-buttons">
+      <button class="btn-cancel" onclick="closeProfileModal()">Отмена</button>
+      <button class="btn-primary" onclick="saveProfile()"><i class="fa-solid fa-save"></i> Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="photoCropModal">
+  <div class="modal-content crop-modal-content">
+    <h3><i class="fa-solid fa-crop-simple"></i> Обрезка фото профиля</h3>
+    <p class="crop-help">Выберите область, которая будет отображаться в миниатюре профиля. Формат миниатюры — круглый.</p>
+    <div class="crop-area"><img id="cropperImage" alt="Фото для обрезки"></div>
+    <div class="cropper-preview-box">
+      <div class="cropper-preview-wrap"><label>Миниатюра</label><div class="cropper-preview-sm"></div></div>
+      <div class="cropper-preview-wrap"><label>Крупный вид</label><div class="cropper-preview-lg"></div></div>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" type="button" onclick="closePhotoCropModal()">Отмена</button>
+      <button class="btn-primary" type="button" onclick="applyCroppedPhoto()"><i class="fa-solid fa-check"></i> Выбрать миниатюру</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="markModal">
+  <div class="modal-content mark-modal-content">
+    <button class="mark-modal-close" onclick="closeMarkModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="mark-modal-header">
+      <div class="mark-modal-badge" id="markModalBadge"></div>
+      <div class="mark-modal-title-block">
+        <div class="mark-modal-subject" id="markModalSubject"></div>
+        <div class="mark-modal-type" id="markModalType"></div>
+      </div>
+    </div>
+    <div class="mark-modal-rows" id="markModalRows"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="footer.js"></script>
+<script>
+(function() {
+    // Загружаем header
+    fetch('header.html')
+        .then(res => {
+            if (!res.ok) throw new Error('Ошибка загрузки header.html');
+            return res.text();
+        })
+        .then(html => {
+            document.getElementById('header-placeholder').innerHTML = html;
+            syncLkContentToTopNav();
+            initHeaderAfterLoad();
+        })
+        .catch(err => console.error(err));
+
+    function syncLkContentToTopNav() {
+        const root = document.documentElement;
+        const sidebar = document.querySelector('.sidebar');
+        const firstLink = document.querySelector('.menu > li:first-child > a');
+        const lastLink = document.querySelector('.menu > li:last-child > a');
+        if (!sidebar || !firstLink || !lastLink) return;
+
+        const sidebarRect = sidebar.getBoundingClientRect();
+        const firstRect = firstLink.getBoundingClientRect();
+        const lastRect = lastLink.getBoundingClientRect();
+        const left = Math.max(firstRect.left, sidebarRect.right + 12);
+        const right = Math.max(left + 320, lastRect.right);
+
+        root.style.setProperty('--lk-content-left-offset', `${Math.round(left - sidebarRect.right)}px`);
+        root.style.setProperty('--lk-content-width', `${Math.round(right - left)}px`);
+    }
+
+    window.addEventListener('resize', syncLkContentToTopNav);
+
+    function initHeaderAfterLoad() {
+        const accessibilityBtn = document.getElementById('accessibilityBtn');
+        const panel = document.getElementById('accessibilityPanel');
+        const closePanelBtn = document.getElementById('closeAccessibilityPanel');
+        const noEffectsCheckbox = document.getElementById('noEffectsCheckbox');
+        const themeBtns = document.querySelectorAll('[data-group="theme"] .option-btn');
+        const fontSizeBtns = document.querySelectorAll('[data-group="fontSize"] .option-btn');
+        const imageModeBtns = document.querySelectorAll('[data-group="imageMode"] .option-btn');
+        const userBlock = document.getElementById('userBlock');
+        const userAvatar = document.getElementById('userAvatar');
+        const userNameSpan = document.getElementById('userName');
+        const userRoleSpan = document.getElementById('userRole');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        let settings = {
+            theme: localStorage.getItem('a11y_theme') || 'original',
+            fontSize: localStorage.getItem('a11y_fontSize') || '1',
+            noEffects: localStorage.getItem('a11y_noEffects') === 'true',
+            imageMode: localStorage.getItem('a11y_imageMode') || 'original'
+        };
+
+        function applySettings() {
+            document.body.classList.remove('dark-theme', 'blue-theme');
+            if (settings.theme === 'dark') document.body.classList.add('dark-theme');
+            else if (settings.theme === 'blue') document.body.classList.add('blue-theme');
+            document.documentElement.classList.remove('font-size-1', 'font-size-2', 'font-size-3', 'font-size-4');
+            document.documentElement.classList.add('font-size-' + settings.fontSize);
+            if (settings.noEffects) document.body.classList.add('no-effects');
+            else document.body.classList.remove('no-effects');
+            document.body.classList.remove('images-grayscale', 'images-hide');
+            if (settings.imageMode === 'grayscale') document.body.classList.add('images-grayscale');
+            else if (settings.imageMode === 'hide') document.body.classList.add('images-hide');
+            updatePanelButtons();
+            if (noEffectsCheckbox) noEffectsCheckbox.checked = settings.noEffects;
+        }
+
+        function updatePanelButtons() {
+            themeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.theme));
+            fontSizeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.fontSize));
+            imageModeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.value === settings.imageMode));
+        }
+
+        function saveSettings() {
+            localStorage.setItem('a11y_theme', settings.theme);
+            localStorage.setItem('a11y_fontSize', settings.fontSize);
+            localStorage.setItem('a11y_noEffects', settings.noEffects);
+            localStorage.setItem('a11y_imageMode', settings.imageMode);
+        }
+
+        themeBtns.forEach(btn => btn.addEventListener('click', () => { settings.theme = btn.dataset.value; saveSettings(); applySettings(); }));
+        fontSizeBtns.forEach(btn => btn.addEventListener('click', () => { settings.fontSize = btn.dataset.value; saveSettings(); applySettings(); }));
+        imageModeBtns.forEach(btn => btn.addEventListener('click', () => { settings.imageMode = btn.dataset.value; saveSettings(); applySettings(); }));
+        if (noEffectsCheckbox) noEffectsCheckbox.addEventListener('change', () => { settings.noEffects = noEffectsCheckbox.checked; saveSettings(); applySettings(); });
+
+        function togglePanel() {
+            panel.classList.toggle('active');
+            if (accessibilityBtn) accessibilityBtn.classList.toggle('active-icon', panel.classList.contains('active'));
+        }
+        if (accessibilityBtn) accessibilityBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePanel(); });
+        if (closePanelBtn) closePanelBtn.addEventListener('click', () => { panel.classList.remove('active'); if (accessibilityBtn) accessibilityBtn.classList.remove('active-icon'); });
+        document.addEventListener('click', (e) => { if (panel && !panel.contains(e.target) && e.target !== accessibilityBtn) { panel.classList.remove('active'); if (accessibilityBtn) accessibilityBtn.classList.remove('active-icon'); } });
+
+        applySettings();
+
+        // Авторизация
+        const isAuth = localStorage.getItem('auth') === 'true';
+        const savedLogin = localStorage.getItem('login');
+        const savedRole = localStorage.getItem('role') || 'Ученик';
+        const savedFullName = localStorage.getItem('full_name') || savedLogin;
+        const savedAvatarColor = localStorage.getItem('avatar_color') || null;
+        const savedProfilePhoto = localStorage.getItem('profile_photo') || '';
+
+        function getInitials(name) { return name ? name.charAt(0).toUpperCase() : '?'; }
+        function getDefaultAvatarColor(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            const colors = [
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+            ];
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        function updateUserInterface() {
+            if (isAuth && savedLogin) {
+                if (userBlock) userBlock.style.display = 'flex';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                const displayName = savedFullName || savedLogin;
+                const avatarColor = savedAvatarColor || getDefaultAvatarColor(displayName);
+                if (userAvatar) {
+                    if (savedProfilePhoto) {
+                        userAvatar.classList.add('has-photo');
+                        userAvatar.style.backgroundImage = `url(${savedProfilePhoto})`;
+                        userAvatar.style.backgroundColor = 'transparent';
+                        userAvatar.textContent = '';
+                    } else {
+                        userAvatar.classList.remove('has-photo');
+                        userAvatar.style.backgroundImage = '';
+                        userAvatar.style.background = avatarColor;
+                        userAvatar.textContent = getInitials(displayName);
+                    }
+                }
+                if (userNameSpan) userNameSpan.textContent = displayName;
+                if (userRoleSpan) userRoleSpan.textContent = savedRole;
+            } else {
+                if (userBlock) userBlock.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+            }
+        }
+        updateUserInterface();
+
+        if (userBlock) {
+            userBlock.onclick = () => { if (isAuth && savedLogin) window.location.href = 'lk.html'; };
+        }
+        if (loginBtn) loginBtn.onclick = () => { window.location.href = 'login.html'; };
+        if (logoutBtn) {
+            logoutBtn.onclick = () => {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    localStorage.removeItem('auth');
+                    localStorage.removeItem('login');
+                    localStorage.removeItem('password');
+                    localStorage.removeItem('role');
+                    localStorage.removeItem('full_name');
+                    localStorage.removeItem('avatar_color');
+                    localStorage.removeItem('profile_photo');
+                    location.reload();
+                }
+            };
+        }
+
+        // После инициализации header вызываем основной код ЛК
+        initLK();
+    }
+})();
+
+
+
+function initLK() {
+    // Адрес Flask-сервера.
+    // Если страница открыта через http(s), берём тот же хост и порт 5000.
+    // Если открыта как обычный file:// файл, используем локальный сервер.
+    const API_URL = (() => {
+        const saved = localStorage.getItem('api_url');
+        if (saved) return saved.replace(/\/$/, '');
+        if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+            const host = window.location.hostname || '127.0.0.1';
+            return `${window.location.protocol}//${host}:5000`;
+        }
+        return 'http://127.0.0.1:5000';
+    })();
+
+    async function apiFetch(path, options = {}) {
+        const url = path.startsWith('http') ? path : `${API_URL}${path}`;
+        return fetch(url, { mode: 'cors', ...options });
+    }
+    const savedLogin = localStorage.getItem("login");
+    const savedPassword = localStorage.getItem("password");
+    if (!savedLogin || !savedPassword) location.href = "login.html";
+
+    let allMessages = [];
+    let dialogsMap = new Map();
+    let currentPartner = null;
+    let currentUserRole = localStorage.getItem("role") || "Ученик";
+    let currentUserFullName = localStorage.getItem("full_name") || savedLogin;
+    let currentAvatarColor = localStorage.getItem("avatar_color") || '';
+    let currentProfilePhoto = localStorage.getItem("profile_photo") || '';
+    let cropper = null;
+    let objectUrlForCrop = null;
+    let currentAnimalId = '';
+
+    const userBlock = document.getElementById('userBlock');
+    const userName = document.getElementById('userName');
+    const userRole = document.getElementById('userRole');
+    const userAvatar = document.getElementById('userAvatar');
+
+    const avatarColors = [
+        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+        'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+        'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+        'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)',
+        'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)',
+        'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+        'linear-gradient(135deg, #2af598 0%, #009efd 100%)'
+    ];
+
+    function getDefaultAvatarColor(name) {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        return avatarColors[Math.abs(hash) % avatarColors.length];
+    }
+
+    function getInitials(name) { return name.charAt(0).toUpperCase(); }
+
+    function setAvatarElement(el, name, color, photo) {
+        if (!el) return;
+        if (photo) {
+            el.classList.add('has-photo');
+            el.style.background = 'transparent';
+            el.style.backgroundImage = `url(${photo})`;
+            el.textContent = '';
+        } else {
+            el.classList.remove('has-photo');
+            el.style.backgroundImage = '';
+            el.style.background = color || getDefaultAvatarColor(name || savedLogin);
+            el.textContent = getInitials(name || savedLogin);
+        }
+    }
+
+    function updateUserAvatar() {
+        const displayName = currentUserFullName || savedLogin;
+        const color = currentAvatarColor || getDefaultAvatarColor(displayName);
+        setAvatarElement(userAvatar, displayName, color, currentProfilePhoto);
+    }
+
+    function updateUserAvatarPreview() {
+        const preview = document.getElementById('profileAvatarPreview');
+        const displayName = currentUserFullName || savedLogin;
+        const color = currentAvatarColor || getDefaultAvatarColor(displayName);
+        setAvatarElement(preview, displayName, color, currentProfilePhoto);
+        const nameEl = document.getElementById('profilePreviewName');
+        const roleEl = document.getElementById('profilePreviewRoleLabel');
+        if (nameEl) nameEl.textContent = currentUserFullName || savedLogin;
+        if (roleEl) roleEl.textContent = currentUserRole;
+        const removeBtn = document.getElementById('removeProfilePhotoBtn');
+        if (removeBtn) removeBtn.style.display = currentProfilePhoto ? 'inline-flex' : 'none';
+    }
+
+    function initAvatarColorPicker() {
+        const container = document.getElementById('avatarColors');
+        if (!container) return;
+        container.innerHTML = '';
+        avatarColors.forEach(color => {
+            const option = document.createElement('div');
+            option.className = 'avatar-color-option';
+            option.style.background = color;
+            option.dataset.color = color;
+            if (color === currentAvatarColor) option.classList.add('active');
+            option.onclick = () => {
+                document.querySelectorAll('.avatar-color-option').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                currentAvatarColor = color;
+                updateUserAvatarPreview();
+            };
+            container.appendChild(option);
+        });
+    }
+
+
+    function initProfilePhotoControls() {
+        const input = document.getElementById('profilePhotoInput');
+        const uploadBtn = document.getElementById('uploadProfilePhotoBtn');
+        const removeBtn = document.getElementById('removeProfilePhotoBtn');
+        if (uploadBtn && input) uploadBtn.onclick = () => input.click();
+        if (input) {
+            input.onchange = (event) => {
+                const file = event.target.files && event.target.files[0];
+                if (!file) return;
+                if (!file.type.startsWith('image/')) { alert('Выберите файл изображения'); input.value = ''; return; }
+                if (file.size > 8 * 1024 * 1024) { alert('Размер фото не должен превышать 8 МБ'); input.value = ''; return; }
+                openPhotoCropModal(file);
+                input.value = '';
+            };
+        }
+        if (removeBtn) {
+            removeBtn.onclick = () => {
+                currentProfilePhoto = '';
+                localStorage.removeItem('profile_photo');
+                updateUserAvatar();
+                updateUserAvatarPreview();
+            };
+        }
+    }
+
+    function openPhotoCropModal(file) {
+        const modal = document.getElementById('photoCropModal');
+        const image = document.getElementById('cropperImage');
+        if (!modal || !image) return;
+        if (cropper) { cropper.destroy(); cropper = null; }
+        if (objectUrlForCrop) URL.revokeObjectURL(objectUrlForCrop);
+        objectUrlForCrop = URL.createObjectURL(file);
+        image.src = objectUrlForCrop;
+        modal.style.display = 'block';
+        image.onload = () => {
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.9,
+                background: false,
+                responsive: true,
+                preview: '.cropper-preview-sm, .cropper-preview-lg'
+            });
+        };
+    }
+
+    window.closePhotoCropModal = function() {
+        const modal = document.getElementById('photoCropModal');
+        if (modal) modal.style.display = 'none';
+        if (cropper) { cropper.destroy(); cropper = null; }
+        if (objectUrlForCrop) { URL.revokeObjectURL(objectUrlForCrop); objectUrlForCrop = null; }
+    };
+
+    window.applyCroppedPhoto = function() {
+        if (!cropper) return;
+        const canvas = cropper.getCroppedCanvas({ width: 360, height: 360, imageSmoothingEnabled: true, imageSmoothingQuality: 'high' });
+        if (!canvas) return;
+        currentProfilePhoto = canvas.toDataURL('image/jpeg', 0.88);
+        localStorage.setItem('profile_photo', currentProfilePhoto);
+        updateUserAvatar();
+        updateUserAvatarPreview();
+        closePhotoCropModal();
+    };
+
+    if (userBlock) {
+        userBlock.style.display = 'flex';
+        userName.textContent = savedLogin;
+        userRole.textContent = currentUserRole;
+        updateUserAvatar();
+
+        userBlock.onclick = () => {
+            document.getElementById("profileRole").value = currentUserRole;
+            document.getElementById("profileFullName").value = currentUserFullName;
+            initAvatarColorPicker();
+            initProfilePhotoControls();
+            updateUserAvatarPreview();
+            document.getElementById("profileModal").style.display = "block";
+        };
+    }
+
+    document.getElementById('logoutBtn').onclick = () => {
+        if(confirm('Выйти из аккаунта?')){ localStorage.clear(); location.href = "login.html"; }
+    };
+
+    async function loadCurrentUserInfo() {
+        try {
+            const response = await apiFetch(`/api/user_info?login=${encodeURIComponent(savedLogin)}`);
+            const data = await response.json();
+            if (data.success && data.user) {
+                currentUserRole = data.user.role;
+                currentUserFullName = data.user.full_name || savedLogin;
+                localStorage.setItem("role", currentUserRole);
+                localStorage.setItem("full_name", currentUserFullName);
+                if (data.user.avatar_color) {
+                    currentAvatarColor = data.user.avatar_color;
+                    localStorage.setItem("avatar_color", currentAvatarColor);
+                }
+                currentProfilePhoto = data.user.profile_photo || localStorage.getItem("profile_photo") || '';
+                if (currentProfilePhoto) localStorage.setItem("profile_photo", currentProfilePhoto);
+                else localStorage.removeItem("profile_photo");
+                userRole.textContent = currentUserRole;
+                updateUserAvatar();
+            }
+        } catch (err) { console.error("Ошибка загрузки профиля:", err); }
+    }
+
+    window.closeProfileModal = function() {
+        document.getElementById("profileModal").style.display = "none";
+    };
+
+    window.saveProfile = async function(silent = false) {
+        const role = document.getElementById("profileRole").value;
+        const fullName = document.getElementById("profileFullName").value.trim();
+        const finalColor = currentAvatarColor || getDefaultAvatarColor(fullName || savedLogin);
+
+        currentUserRole = role;
+        currentUserFullName = fullName || savedLogin;
+        currentAvatarColor = finalColor;
+        localStorage.setItem("role", role);
+        localStorage.setItem("full_name", currentUserFullName);
+        localStorage.setItem("avatar_color", currentAvatarColor);
+        if (currentProfilePhoto) localStorage.setItem("profile_photo", currentProfilePhoto);
+        else localStorage.removeItem("profile_photo");
+        userRole.textContent = currentUserRole;
+        updateUserAvatar();
+
+        try {
+            const response = await apiFetch(`/api/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    login: savedLogin,
+                    password: savedPassword || '',
+                    role: role,
+                    full_name: fullName || savedLogin,
+                    avatar_color: finalColor,
+                    profile_photo: currentProfilePhoto || ''
+                })
+            });
+            const data = await response.json();
+            if (data.success) {
+                if (!silent) {
+                    closeProfileModal();
+                    if (currentPartner) loadPartnerInfo(currentPartner);
+                    alert('Профиль успешно сохранён!');
+                } else {
+                    if (currentPartner) loadPartnerInfo(currentPartner);
+                }
+            } else {
+                if (!silent) alert("Ошибка сохранения: " + (data.error || ''));
+            }
+        } catch (err) {
+            console.error('Сервер недоступен, профиль сохранён локально:', err);
+            if (!silent) {
+                closeProfileModal();
+                if (currentPartner) loadPartnerInfo(currentPartner);
+                alert('Профиль сохранён локально (сервер недоступен)');
+            }
+        }
+    };
+
+    function formatTime(timestamp) {
+        const date = new Date(timestamp.replace(' ', 'T') + '+03:00');
+        if (isNaN(date.getTime())) return timestamp;
+        const now = new Date(); const mskOffset = 3 * 60; const localOffset = now.getTimezoneOffset(); const offsetDiff = mskOffset + localOffset;
+        const mskDate = new Date(date.getTime() + offsetDiff * 60 * 1000); const mskNow = new Date(now.getTime() + offsetDiff * 60 * 1000);
+        const today = new Date(mskNow.getFullYear(), mskNow.getMonth(), mskNow.getDate());
+        const msgDate = new Date(mskDate.getFullYear(), mskDate.getMonth(), mskDate.getDate());
+        const hours = mskDate.getHours().toString().padStart(2, '0'); const minutes = mskDate.getMinutes().toString().padStart(2, '0');
+        if (msgDate.getTime() === today.getTime()) return `${hours}:${minutes}`;
+        const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+        if (msgDate.getTime() === yesterday.getTime()) return `Вчера ${hours}:${minutes}`;
+        const day = mskDate.getDate().toString().padStart(2, '0'); const month = (mskDate.getMonth() + 1).toString().padStart(2, '0');
+        if (mskDate.getFullYear() === mskNow.getFullYear()) return `${day}.${month} ${hours}:${minutes}`;
+        return `${day}.${month}.${mskDate.getFullYear()} ${hours}:${minutes}`;
+    }
+
+    async function loadMessages() {
+        try {
+            const response = await apiFetch(`/api/messages?login=${encodeURIComponent(savedLogin)}`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (data.success) { allMessages = data.data; buildDialogs(); if (currentPartner) { renderMessages(currentPartner); markMessagesAsRead(currentPartner); } }
+        } catch (err) { console.error("Ошибка загрузки сообщений:", err); }
+    }
+    async function markMessagesAsRead(partner) {
+        localStorage.setItem('lk_active_tab', 'messages');
+        try {
+            await apiFetch(`/api/mark_read`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ login: savedLogin, partner: partner })
+            });
+            setActiveTab('messages', false);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    function buildDialogs() {
+        dialogsMap.clear();
+        allMessages.forEach(msg => { const partner = (msg.sender === savedLogin) ? msg.recipient : msg.sender; if (!dialogsMap.has(partner)) dialogsMap.set(partner, []); dialogsMap.get(partner).push(msg); });
+        const container = document.getElementById("dialogs"); 
+        if (!container) return;
+        container.innerHTML = "";
+        const sortedPartners = Array.from(dialogsMap.keys()).sort((a,b) => { const lastA = dialogsMap.get(a)[dialogsMap.get(a).length-1]; const lastB = dialogsMap.get(b)[dialogsMap.get(b).length-1]; return new Date(lastB.timestamp) - new Date(lastA.timestamp); });
+        sortedPartners.forEach(partner => {
+            const msgs = dialogsMap.get(partner); const lastMsg = msgs[msgs.length-1];
+            const div = document.createElement("div"); div.className = "dialog" + (partner === currentPartner ? " active" : "");
+            const avatar = document.createElement("div"); avatar.className = "dialog-avatar";
+            avatar.style.background = getDefaultAvatarColor(partner);
+            avatar.textContent = getInitials(partner);
+            div.appendChild(avatar);
+            const info = document.createElement("div"); info.className = "dialog-info";
+            const name = document.createElement("div"); name.className = "dialog-name"; name.textContent = partner; info.appendChild(name);
+            const preview = document.createElement("div"); preview.className = "dialog-preview"; const prefix = lastMsg.sender === savedLogin ? "Вы: " : ""; preview.textContent = prefix + (lastMsg.text.length > 25 ? lastMsg.text.substring(0,25)+"..." : lastMsg.text); info.appendChild(preview);
+            div.appendChild(info);
+            div.onclick = () => { currentPartner = partner; document.getElementById("inputArea").style.display = "flex"; document.getElementById("noDialog").style.display = "none"; document.getElementById("chatHeader").style.display = "flex"; loadPartnerInfo(partner); buildDialogs(); renderMessages(partner); markMessagesAsRead(partner); };
+            container.appendChild(div);
+        });
+        if (dialogsMap.size === 0) { container.innerHTML = "<div style='padding:30px;color:#999;text-align:center;'><i class='fa-solid fa-inbox' style='font-size:2rem;display:block;margin-bottom:10px;'></i>Нет сообщений</div>"; document.getElementById("inputArea").style.display = "none"; document.getElementById("noDialog").style.display = "flex"; document.getElementById("chatHeader").style.display = "none"; currentPartner = null; }
+    }
+    function renderMessages(partner) {
+        const container = document.getElementById("messages"); 
+        if (!container) return;
+        container.innerHTML = ""; const msgs = dialogsMap.get(partner) || []; let lastDate = null;
+        msgs.forEach(msg => {
+            const msgDate = new Date(msg.timestamp.replace(' ', 'T') + '+03:00'); const dateStr = msgDate.toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' });
+            if (dateStr !== lastDate) { const dateDiv = document.createElement("div"); dateDiv.className = "system-message"; dateDiv.textContent = dateStr; container.appendChild(dateDiv); lastDate = dateStr; }
+            const isMe = msg.sender === savedLogin; const wrapper = document.createElement("div"); wrapper.className = "message-wrapper " + (isMe ? "me" : "other");
+            const messageDiv = document.createElement("div"); messageDiv.className = "message " + (isMe ? "me-message" : "other-message");
+            const textDiv = document.createElement("div"); textDiv.className = "message-text"; textDiv.textContent = msg.text; messageDiv.appendChild(textDiv);
+            const footerDiv = document.createElement("div"); footerDiv.className = "message-footer"; const timeSpan = document.createElement("span"); timeSpan.className = "message-time"; timeSpan.textContent = formatTime(msg.timestamp); footerDiv.appendChild(timeSpan);
+            if (isMe) { const statusSpan = document.createElement("span"); statusSpan.className = "message-status"; if (msg.read) { statusSpan.innerHTML = '<i class="fa-solid fa-check status-check read"></i><i class="fa-solid fa-check status-check read" style="margin-left:-5px;"></i>'; statusSpan.title = "Прочитано"; } else { statusSpan.innerHTML = '<i class="fa-solid fa-check status-check sent"></i>'; statusSpan.title = "Отправлено"; } footerDiv.appendChild(statusSpan); }
+            messageDiv.appendChild(footerDiv); wrapper.appendChild(messageDiv); container.appendChild(wrapper);
+        });
+        container.scrollTop = container.scrollHeight;
+    }
+    async function loadPartnerInfo(login) {
+        try {
+            const response = await apiFetch(`/api/user_info?login=${encodeURIComponent(login)}`); const data = await response.json();
+            if (data.success && data.user) {
+                const user = data.user;
+                const chatAvatar = document.getElementById("chatAvatar");
+                if (chatAvatar) {
+                    setAvatarElement(chatAvatar, user.full_name || login, user.avatar_color || getDefaultAvatarColor(login), user.profile_photo || '');
+                }
+                const chatUsername = document.getElementById("chatUsername");
+                if (chatUsername) chatUsername.textContent = user.full_name || login;
+                const roleContainer = document.getElementById("chatRole"); 
+                if (roleContainer) {
+                    roleContainer.innerHTML = '';
+                    const roleBadge = document.createElement("span"); roleBadge.className = `role-badge role-${user.role}`; roleBadge.textContent = user.role || 'Ученик'; roleContainer.appendChild(roleBadge);
+                    if (user.login !== (user.full_name || login)) roleContainer.appendChild(document.createTextNode(` @${user.login}`));
+                }
+            }
+        } catch (err) {
+            console.error("Ошибка загрузки информации о партнёре:", err);
+        }
+    }
+    async function sendMessage() {
+        localStorage.setItem('lk_active_tab', 'messages');
+        setActiveTab('messages', false);
+
+        const input = document.getElementById("msgInput");
+        if (!input) return;
+
+        const text = input.value.trim();
+        if (!text || !currentPartner || input.dataset.sending === 'true') return;
+
+        input.dataset.sending = 'true';
+        try {
+            const response = await apiFetch(`/api/send`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sender: savedLogin, recipient: currentPartner, text: text })
+            });
+            const data = await response.json();
+            if (data.success) {
+                input.value = "";
+                await loadMessages();
+                setActiveTab('messages', false);
+            } else {
+                alert(data.error || "Ошибка отправки");
+            }
+        } catch (err) {
+            alert("Не удалось отправить");
+        } finally {
+            input.dataset.sending = 'false';
+        }
+    }
+    window.closeNewMsgModal = function() { document.getElementById("newMessageModal").style.display = "none"; document.getElementById("recipientLogin").value = ""; document.getElementById("newMessageText").value = ""; };
+    window.sendNewMessage = async function() {
+        const recipient = document.getElementById("recipientLogin").value.trim(); const text = document.getElementById("newMessageText").value.trim();
+        if (!recipient || !text) { alert("Введите логин и текст"); return; }
+        try { const response = await apiFetch(`/api/send`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sender: savedLogin, recipient: recipient, text: text }) }); const data = await response.json(); if (data.success) { localStorage.setItem('lk_active_tab', 'messages'); setActiveTab('messages', false); closeNewMsgModal(); currentPartner = recipient; document.getElementById("inputArea").style.display = "flex"; document.getElementById("noDialog").style.display = "none"; document.getElementById("chatHeader").style.display = "flex"; await loadPartnerInfo(recipient); await loadMessages(); setActiveTab('messages', false); } else alert("Ошибка отправки"); } catch (err) { alert("Не удалось отправить"); }
+    };
+    let messagesInitialized = false;
+    function initMessagesTab() { if (!messagesInitialized) { loadCurrentUserInfo().then(() => loadMessages()); messagesInitialized = true; } else { loadMessages(); } if (window.messagesInterval) clearInterval(window.messagesInterval); window.messagesInterval = setInterval(() => { const activeTab = document.querySelector('.tab-content.active'); if (activeTab && activeTab.id === 'tab-messages') loadMessages(); }, 5000); }
+
+    const sidebarLinks = document.querySelectorAll('.sidebar a');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    function setActiveTab(tabId, shouldLoad = true) {
+        if (!tabId || !document.getElementById(`tab-${tabId}`)) tabId = 'diary';
+        localStorage.setItem('lk_active_tab', tabId);
+
+        sidebarLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('data-tab') === tabId);
+        });
+
+        tabContents.forEach(tab => tab.classList.remove('active'));
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+
+        if (!shouldLoad) return;
+
+        switch(tabId) {
+            case 'diary':
+                loadDiary();
+                break;
+            case 'grades':
+                initGradesTab();
+                break;
+            case 'messages':
+                initMessagesTab();
+                break;
+            case 'announcements':
+                loadAnnouncements();
+                break;
+        }
+    }
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveTab(this.getAttribute('data-tab'));
+        });
+    });
+
+    let currentDate = new Date();
+    const login = savedLogin;
+    const password = savedPassword;
+
+    function formatDateISO(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    function getMonday(date) {
+        const start = new Date(date);
+        const day = start.getDay();
+        const diff = start.getDate() - day + (day === 0 ? -6 : 1);
+        start.setDate(diff);
+        start.setHours(12, 0, 0, 0);
+        return start;
+    }
+
+    function formatWeekLabel(start, end) {
+        return start.toLocaleDateString("ru-RU", {day:'numeric',month:'long'}) + " — " + end.toLocaleDateString("ru-RU", {day:'numeric',month:'long',year:'numeric'});
+    }
+
+    function initWeekSelect() {
+        const select = document.getElementById('weekSelect');
+        if (!select || select.dataset.ready === 'true') return;
+
+        const academicStart = getMonday(new Date(2025, 8, 1));
+        const academicEnd = new Date(2026, 4, 31);
+        let cursor = new Date(academicStart);
+        let weekIndex = 1;
+
+        while (cursor <= academicEnd) {
+            const start = new Date(cursor);
+            const end = new Date(cursor);
+            end.setDate(start.getDate() + 6);
+
+            const option = document.createElement('option');
+            option.value = formatDateISO(start);
+            option.textContent = `${weekIndex}. ${formatWeekLabel(start, end)}`;
+            select.appendChild(option);
+
+            cursor.setDate(cursor.getDate() + 7);
+            weekIndex++;
+        }
+
+        select.addEventListener('change', () => {
+            currentDate = new Date(select.value + 'T12:00:00');
+            loadDiary();
+        });
+        select.dataset.ready = 'true';
+    }
+
+    function getWeekRange(date) {
+        initWeekSelect();
+        const start = getMonday(date);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+
+        const weekLabel = document.getElementById("weekLabel");
+        if (weekLabel) weekLabel.innerText = formatWeekLabel(start, end);
+
+        const select = document.getElementById('weekSelect');
+        if (select) {
+            const value = formatDateISO(start);
+            if ([...select.options].some(opt => opt.value === value)) select.value = value;
+        }
+
+        return { start: formatDateISO(start), end: formatDateISO(end) };
+    }
+
+    window.prevWeek = function(){ currentDate.setDate(currentDate.getDate()-7); loadDiary(); };
+    window.nextWeek = function(){ currentDate.setDate(currentDate.getDate()+7); loadDiary(); };
+    window.currentWeek = function(){ currentDate = new Date(); loadDiary(); };
+    async function loadDiary() { const range = getWeekRange(currentDate); const container = document.getElementById("diary"); container.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i><p>Загрузка дневника...</p></div>'; try { const res = await apiFetch(`/api/diary`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({login,password,...range}) }); const data = await res.json(); if (data.success) renderDiary(data.data); else showError(container, "fa-triangle-exclamation", data.error || 'Ошибка'); } catch (err) { showError(container, "fa-server", "Сервер недоступен", err.message); } }
+    function escapeHtml(text) {
+        return String(text ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function renderDiary(days) {
+    const container = document.getElementById("diary");
+    container.innerHTML = "";
+    if (!days || days.length === 0) { 
+        showError(container, "fa-calendar-xmark", "Нет данных"); 
+        return; 
+    }
+    
+    const dayNames = {
+        0:'воскресенье', 1:'понедельник', 2:'вторник', 
+        3:'среда', 4:'четверг', 5:'пятница', 6:'суббота'
+    };
+    
+    days.forEach(day => {
+        const div = document.createElement("div");
+        div.className = "day";
+        const dateObj = new Date(day.date);
+        const dayOfWeek = dayNames[dateObj.getDay()];
+        const formattedDate = dateObj.toLocaleDateString("ru-RU", {
+            day:'numeric', month:'long', year:'numeric'
+        });
+        
+        let html = `<div class="day-title">${formattedDate}
+            <span class="day-name">${dayOfWeek}</span>
+        </div>
+        <table style="table-layout:fixed;width:100%;">
+          <colgroup>
+            <col style="width:5%">
+            <col style="width:20%">
+            <col style="width:40%">
+            <col style="width:35%">
+          </colgroup>
+          <tr>
+            <th style="text-align:center;">N</th>
+            <th>Предмет</th>
+            <th>Домашнее задание</th>
+            <th style="text-align:center;">Оценки</th>
+          </tr>`;
+        
+        if (day.lessons && day.lessons.length > 0) {
+            day.lessons.forEach((l, i) => {
+                // Оценки
+                const marksHtml = l.details && l.details.length > 0
+                    ? `<div class="marks-cell diary-marks-cell">${l.details.map(d => {
+                        const enriched = Object.assign({}, d, {
+                            teacher: d.teacher || l.teacher || '',
+                            theme: d.theme || l.theme || ''
+                        });
+                        console.log('MARK DETAILS FROM DIARY CONTEXT', enriched);
+                        const safeData = encodeURIComponent(JSON.stringify(enriched));
+                        const v = parseInt(d.value) || 0;
+                        const bg = v >= 5 ? 'mark-bg-5' : v >= 4 ? 'mark-bg-4' : v >= 3 ? 'mark-bg-3' : 'mark-bg-2';
+                        const title = [
+                            enriched.subject || '',
+                            enriched.type || '',
+                            enriched.theme || enriched.assignmentName || '',
+                            enriched.teacher || ''
+                        ].filter(Boolean).join(' | ');
+                        return `<span class="mark-segment ${bg} clickable" title="${escapeHtml(title)}" onclick="openMarkModal('${safeData}')">${escapeHtml(d.value)}</span>`;
+                    }).join('')}</div>`
+                    : '<span style="color:#ccc;">-</span>';
+                
+                // Домашнее задание
+                const hwItems = Array.isArray(l.hw) ? l.hw
+                    : Array.isArray(l.homework) ? l.homework
+                    : (typeof l.hw === 'string' && l.hw.trim()) ? [l.hw]
+                    : (typeof l.homework === 'string' && l.homework.trim()) ? [l.homework]
+                    : [];
+                const hwText = hwItems.length > 0
+                    ? hwItems.map(h => `<div style="margin-bottom:4px;font-size:0.85rem;line-height:1.35;">${escapeHtml(String(h))}</div>`).join("")
+                    : "-";
+                
+                // Учитель
+                const teacherInfo = l.teacher && l.teacher !== 'Не указан' 
+                    ? `<div style="font-size:0.7rem;color:#888;margin-top:2px;">Учитель: ${l.teacher}</div>` 
+                    : '';
+                
+                html += `<tr>
+                    <td style="text-align:center;">${i+1}</td>
+                    <td>
+                        <span class="subject">${l.subject}</span>
+                        ${teacherInfo}
+                    </td>
+                    <td style="word-break:break-word;">${hwText}</td>
+                    <td style="text-align:center;">${marksHtml}</td>
+                </tr>`;
+            });
+        } else {
+            html += '<tr><td colspan="4" style="text-align:center;padding:20px;">Нет уроков</td></tr>';
+        }
+        html += "</table>";
+        div.innerHTML = html;
+        container.appendChild(div);
+    });
+}
+    window.openMarkModal = function(encodedData) {
+        try {
+            const d = JSON.parse(decodeURIComponent(encodedData));
+            const val = parseInt(d.value) || 0;
+
+            const badge = document.getElementById('markModalBadge');
+            badge.textContent = d.value;
+            badge.className = 'mark-modal-badge mark-badge-' + (val >= 5 ? 5 : val >= 4 ? 4 : val >= 3 ? 3 : 2);
+
+            document.getElementById('markModalSubject').textContent = d.subject || '—';
+            document.getElementById('markModalType').textContent = d.type && d.type !== 'Не указано' ? d.type : 'Тип работы не указан';
+
+            const rows = [
+                { icon: 'fa-calendar-day', label: 'Дата',       value: d.date    || '—' },
+                { icon: 'fa-book',         label: 'Предмет',    value: d.subject || '—' },
+                { icon: 'fa-pen-ruler',    label: 'Тип работы', value: (d.type && d.type !== 'Не указано') ? d.type : '—' },
+                { icon: 'fa-scroll',       label: 'Тема задания', value: d.assignmentName || d.theme || '—' },
+                { icon: 'fa-chalkboard-user', label: 'Учитель', value: d.teacher || '—' },
+            ];
+
+            document.getElementById('markModalRows').innerHTML = rows.map(r => `
+                <div class="mark-modal-row">
+                    <div class="mark-modal-row-icon"><i class="fa-solid ${r.icon}"></i></div>
+                    <div class="mark-modal-row-text">
+                        <span class="mark-modal-row-label">${r.label}</span>
+                        <span class="mark-modal-row-value">${r.value}</span>
+                    </div>
+                </div>`).join('');
+
+            document.getElementById('markModal').style.display = 'block';
+        } catch(e) {
+            console.error("Ошибка открытия модального окна:", e);
+        }
+    };
+
+    window.closeMarkModal = function() {
+        document.getElementById('markModal').style.display = 'none';
+    };
+
+    window.selectQuarter = function(btn) {
+        document.querySelectorAll('.quarter-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const val = btn.dataset.value;
+        const customPeriod = document.getElementById('customPeriod');
+        if (val === 'custom') {
+            customPeriod.style.display = 'flex';
+            initReportDates();
+        } else {
+            customPeriod.style.display = 'none';
+            loadReportForQuarter(val);
+        }
+    };
+
+    function loadReportForQuarter(quarter) {
+        const quarters = {
+            'quarter1': { start: '2025-09-01', end: '2025-10-24' },
+            'quarter2': { start: '2025-10-25', end: '2026-01-11' },
+            'quarter3': { start: '2026-01-12', end: '2026-04-05' },
+            'quarter4': { start: '2026-04-06', end: '2026-05-31' }
+        };
+        
+        const period = quarters[quarter];
+        loadReportWithDates(period.start, period.end);
+    }
+
+    function initReportDates() {
+        const now = new Date();
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+        document.getElementById("reportStart").value = firstDay.toISOString().split("T")[0];
+        document.getElementById("reportEnd").value = now.toISOString().split("T")[0];
+    }
+
+    function initGradesTab() {
+        document.querySelectorAll('.quarter-pill').forEach(p => p.classList.remove('active'));
+        const customPeriod = document.getElementById('customPeriod');
+        if (customPeriod) customPeriod.style.display = 'none';
+        document.getElementById('report').innerHTML = '<div class="grades-placeholder"><i class="fa-solid fa-chart-line"></i><p>Выберите период выше</p></div>';
+    }
+
+    window.loadReport = function() {
+        const start = document.getElementById("reportStart").value;
+        const end = document.getElementById("reportEnd").value;
+        
+        if(!start || !end) {
+            alert("Выберите даты");
+            return;
+        }
+        
+        loadReportWithDates(start, end);
+    };
+
+    async function loadReportWithDates(start, end) {
+        const container = document.getElementById("report");
+        if(!start||!end){ alert("Выберите даты"); return; }
+        container.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i><p>Загрузка отчёта...</p></div>';
+        try{ const res = await apiFetch(`/api/report`, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({login,password,start,end}) }); const data = await res.json(); if(data.success && data.data && data.data.dates && data.data.dates.length>0) { renderReportTable(data.data); } else { showError(container, "fa-chart-simple", data.error||"Нет данных"); } } catch(err){ showError(container, "fa-server", "Сервер недоступен", err.message); } }
+
+    function getMarkColor(value) {
+        const v = parseFloat(value);
+        if (isNaN(v)) return 'mark-bg-2';
+        const rounded = v >= 5 ? 5 : v >= 4 ? 4 : v >= 3 ? 3 : 2;
+        if (rounded >= 5) return 'mark-bg-5';
+        if (rounded >= 4) return 'mark-bg-4';
+        if (rounded >= 3) return 'mark-bg-3';
+        return 'mark-bg-2';
+    }
+
+    function countAllMarks(grid) {
+        let totalMarks = 0;
+        let sumMarks = 0;
+        Object.values(grid).forEach(dateMarks => {
+            Object.values(dateMarks).forEach(marks => {
+                marks.forEach(mark => {
+                    const val = parseFloat(mark);
+                    if (!isNaN(val)) {
+                        totalMarks++;
+                        sumMarks += val;
+                    }
+                });
+            });
+        });
+        return {
+            totalMarks,
+            exactAverage: totalMarks > 0 ? (sumMarks / totalMarks).toFixed(2) : 0
+        };
+    }
+
+    function getAverageColorClass(avg) {
+        const v = parseFloat(avg);
+        if (isNaN(v) || v <= 0) return '';
+        if (v <= 2.59) return 'avg-score-red';
+        if (v <= 3.59) return 'avg-score-yellow';
+        if (v <= 4.59) return 'avg-score-blue';
+        return 'avg-score-green';
+    }
+
+    function renderReportTable(reportData){
+        const { subjects, dates, grid, averages } = reportData;
+        const dateHeaders = dates.map(d => { const dt = new Date(d); return dt.toLocaleDateString("ru-RU", {day:"numeric", month:"short"}); });
+        const { totalMarks, exactAverage } = countAllMarks(grid);
+        
+        let html = `<div class="report-wrapper">
+            <div class="report-scroll">
+                <table id="reportTable">
+                    <thead><tr><th>Предмет</th>${dateHeaders.map(dh => `<th>${dh}</th>`).join('')}<th>Средн. балл</th></tr></thead>
+                    <tbody>`;
+        
+        subjects.forEach(subj => {
+            html += `<tr><td>${subj}</td>`;
+            dates.forEach(d => {
+                const marks = grid[subj]?.[d] || [];
+                if (marks.length === 0) {
+                    html += `<td><div class="empty-cell"></div></td>`;
+                } else if (marks.length === 1) {
+                    const colorClass = getMarkColor(parseFloat(marks[0]));
+                    html += `<td><div class="marks-cell"><span class="mark-segment ${colorClass}">${marks[0]}</span></div></td>`;
+                } else {
+                    html += `<td><div class="marks-cell">`;
+                    marks.forEach(mark => { const colorClass = getMarkColor(parseFloat(mark)); html += `<span class="mark-segment ${colorClass}">${mark}</span>`; });
+                    html += `</div></td>`;
+                }
+            });
+            
+            const avg = averages[subj] || 0;
+            const exactAvg = avg > 0 ? avg.toFixed(2) : '—';
+            const avgColorClass = getAverageColorClass(avg);
+            
+            html += `<td><span class="avg-score ${avgColorClass}">${exactAvg}</span></td></tr>`;
+        });
+        
+        html += `</tbody></table></div>
+            <div class="report-summary">
+                <div class="summary-card"><div class="summary-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);"><i class="fa-solid fa-calculator"></i></div><div class="summary-info"><h4>Общий средний балл</h4><p><span class="avg-score ${getAverageColorClass(exactAverage)}">${exactAverage}</span></p></div></div>
+                <div class="summary-card"><div class="summary-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);"><i class="fa-solid fa-hashtag"></i></div><div class="summary-info"><h4>Всего оценок</h4><p>${totalMarks}</p></div></div>
+                <div class="summary-card"><div class="summary-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);"><i class="fa-solid fa-book-open"></i></div><div class="summary-info"><h4>Предметов</h4><p>${subjects.length}</p></div></div>
+            </div>
+        </div>`;
+        
+        document.getElementById("report").innerHTML = html;
+    }
+
+    window.loadAnnouncements = async function(){
+        const container = document.getElementById("announcementsList");
+        container.innerHTML = '<div class="loading"><i class="fa-solid fa-spinner fa-spin"></i><p>Загрузка объявлений из СГО...</p></div>';
+        try {
+            const res = await apiFetch(`/api/announcements`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({login, password})
+            });
+            const data = await res.json();
+            if (data.success && data.data && data.data.length > 0) {
+                const cacheNote = data.cached
+                    ? '<div style="font-size:0.8rem;color:#888;margin-bottom:10px;"><i class="fa-solid fa-database"></i> Данные из кэша (нет связи с СГО)</div>'
+                    : '';
+                let html = cacheNote;
+                data.data.forEach(ann => {
+                    html += `<div class="announcement-card">
+                        <div class="announcement-title">📢 ${ann.title}</div>
+                        <div class="announcement-date">
+                            <i class="fa-solid fa-calendar"></i> ${ann.date || 'Без даты'}
+                            <span class="announcement-author"><i class="fa-solid fa-user"></i> ${ann.author || 'Администрация'}</span>
+                        </div>
+                        <div class="announcement-text">${ann.content}</div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            } else {
+                showError(container, "fa-bullhorn", data.error || "Нет объявлений");
+            }
+        } catch(err) {
+            showError(container, "fa-server", "Сервер недоступен", err.message);
+        }
+    };
+    function showError(container, icon, message, details=''){ container.innerHTML = `<div class="error-message"><i class="fa-solid ${icon}" style="font-size:3rem;display:block;margin-bottom:10px;"></i><p>${message}</p>${details?`<p style="color:#888;">${details}</p>`:''}</div>`; }
+
+    loadCurrentUserInfo();
+    setActiveTab(localStorage.getItem('lk_active_tab') || 'diary');
+    document.getElementById("newMsgBtn").onclick = () => { document.getElementById("newMessageModal").style.display = "block"; document.getElementById("recipientLogin").focus(); };
+    document.getElementById("msgInput")?.addEventListener("keydown", function(e){
+        if(e.key === "Enter") {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    window.onclick = function(event) { const modalNew = document.getElementById("newMessageModal"); const modalProfile = document.getElementById("profileModal"); const modalMark = document.getElementById("markModal"); const modalCrop = document.getElementById("photoCropModal"); if (event.target == modalNew) closeNewMsgModal(); if (event.target == modalProfile) closeProfileModal(); if (event.target == modalMark) closeMarkModal(); if (event.target == modalCrop) closePhotoCropModal(); };
+}
+</script>
+
+</body>
+</html>
