@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import asyncio
+import traceback
 from datetime import datetime, date, timedelta
 from pathlib import Path
 
@@ -9,8 +10,11 @@ from flask_cors import CORS
 
 try:
     from netschoolapi import NetSchoolAPI
-except Exception:
+except Exception as import_error:
     NetSchoolAPI = None
+    NETSCHOOL_IMPORT_ERROR = str(import_error)
+else:
+    NETSCHOOL_IMPORT_ERROR = ""
 
 
 app = Flask(__name__)
@@ -19,12 +23,22 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "users.db"
 
-NETSCHOOL_URL = os.environ.get("NETSCHOOL_URL", "https://sgo.volganet.ru")
+NETSCHOOL_URL = os.environ.get("NETSCHOOL_URL", "https://sgo.volganet.ru").rstrip("/")
 NETSCHOOL_SCHOOL = os.environ.get("NETSCHOOL_SCHOOL", "Буракская СШ")
 
 
+# ---------- helpers ----------
+
 def run_async(coro):
     return asyncio.run(coro)
+
+
+def now_iso():
+    return datetime.utcnow().isoformat(timespec="seconds")
+
+
+def parse_date(value):
+    return datetime.strptime(value, "%Y-%m-%d").date()
 
 
 def db():
@@ -37,9 +51,33 @@ def has_col(conn, table, col):
     return any(row["name"] == col for row in conn.execute(f"PRAGMA table_info({table})"))
 
 
-def now_iso():
-    return datetime.utcnow().isoformat(timespec="seconds")
+def safe_attr(obj, name, default=""):
+    value = getattr(obj, name, default)
+    if value is None:
+        return default
+    return value
 
+
+def to_iso(value):
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    return str(value or "")
+
+
+def error_response(title, exc, status=500):
+    details = str(exc)
+    print(title)
+    print(details)
+    print(traceback.format_exc())
+    return jsonify({
+        "success": False,
+        "error": title,
+        "details": details,
+        "type": exc.__class__.__name__,
+    }), status
+
+
+# ---------- database ----------
 
 def init_db():
     conn = db()
@@ -59,7 +97,7 @@ def init_db():
         )
     """)
 
-    columns = {
+    migrations = {
         "email": "ALTER TABLE users ADD COLUMN email TEXT DEFAULT ''",
         "password": "ALTER TABLE users ADD COLUMN password TEXT DEFAULT ''",
         "role": "ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'Ученик'",
@@ -68,7 +106,7 @@ def init_db():
         "profile_photo": "ALTER TABLE users ADD COLUMN profile_photo TEXT DEFAULT ''",
     }
 
-    for col, sql in columns.items():
+    for col, sql in migrations.items():
         if not has_col(conn, "users", col):
             conn.execute(sql)
 
@@ -155,57 +193,55 @@ def ensure_user(login, password="", email="", role="Ученик", full_name="",
     return user
 
 
-def parse_date(value):
-    return datetime.strptime(value, "%Y-%m-%d").date()
+# ---------- SGO parsing ----------
+
+def get_assignment_subject(assignment, fallback):
+    subject = safe_attr(assignment, "subject", "")
+    return subject or fallback or "Предмет"
 
 
-def safe_attr(obj, name, default=""):
-    return getattr(obj, name, default) or default
+def get_assignment_text(assignment):
+    return safe_attr(assignment, "content", "") or safe_attr(assignment, "assignmentName", "")
 
 
-def to_front_date(value):
-    if hasattr(value, "isoformat"):
-        return value.isoformat()
-    return str(value)
-
-
-def format_mark(value):
-    if value is None:
+def get_assignment_mark(assignment):
+    mark = safe_attr(assignment, "mark", None)
+    if mark is None:
         return ""
-    return str(value)
+    return str(mark)
 
 
-def diary_to_frontend(diary):
+def diary_to_frontend(diary_obj):
     result = []
-    schedule = getattr(diary, "schedule", []) or []
 
-    for day in schedule:
-        day_date = safe_attr(day, "day", date.today())
+    for day_obj in safe_attr(diary_obj, "schedule", []) or []:
+        day_date = safe_attr(day_obj, "day", date.today())
         lessons_result = []
 
-        for lesson in getattr(day, "lessons", []) or []:
-            subject = safe_attr(lesson, "subject", "Предмет")
-            assignments = getattr(lesson, "assignments", []) or []
+        for lesson_obj in safe_attr(day_obj, "lessons", []) or []:
+            subject = safe_attr(lesson_obj, "subject", "Предмет")
+            assignments = safe_attr(lesson_obj, "assignments", []) or []
 
             homework = []
             marks = []
             details = []
 
             for assignment in assignments:
-                content = safe_attr(assignment, "content", "")
-                mark = getattr(assignment, "mark", None)
+                assignment_type = safe_attr(assignment, "type", "")
+                content = get_assignment_text(assignment)
+                mark = get_assignment_mark(assignment)
+                assignment_subject = get_assignment_subject(assignment, subject)
 
-                if content:
+                if content and not mark:
                     homework.append(content)
 
-                if mark is not None:
-                    mark_value = format_mark(mark)
-                    marks.append(mark_value)
+                if mark:
+                    marks.append(mark)
                     details.append({
-                        "value": mark_value,
-                        "subject": subject,
+                        "value": mark,
+                        "subject": assignment_subject,
                         "date": day_date.strftime("%d.%m.%Y") if hasattr(day_date, "strftime") else str(day_date),
-                        "type": safe_attr(assignment, "type", "Не указано"),
+                        "type": assignment_type or "Не указано",
                         "assignmentName": content,
                         "theme": content,
                         "teacher": "",
@@ -214,11 +250,13 @@ def diary_to_frontend(diary):
                     })
 
             lessons_result.append({
-                "number": safe_attr(lesson, "number", ""),
+                "number": safe_attr(lesson_obj, "number", ""),
                 "subject": subject,
                 "teacher": "",
                 "theme": "",
-                "room": safe_attr(lesson, "room", ""),
+                "room": safe_attr(lesson_obj, "room", ""),
+                "start": to_iso(safe_attr(lesson_obj, "start", "")),
+                "end": to_iso(safe_attr(lesson_obj, "end", "")),
                 "hw": homework,
                 "homework": homework,
                 "marks": marks,
@@ -226,7 +264,7 @@ def diary_to_frontend(diary):
             })
 
         result.append({
-            "date": to_front_date(day_date),
+            "date": to_iso(day_date),
             "lessons": lessons_result,
         })
 
@@ -240,18 +278,20 @@ def build_report(days):
 
     for day in days:
         day_date = day.get("date")
-        if day_date not in dates:
+        if day_date and day_date not in dates:
             dates.append(day_date)
 
         for lesson in day.get("lessons", []):
             subject = lesson.get("subject") or "Предмет"
+
             if subject not in subjects:
                 subjects.append(subject)
 
             grid.setdefault(subject, {}).setdefault(day_date, [])
+
             for mark in lesson.get("marks", []):
                 if mark:
-                    grid[subject][day_date].append(mark)
+                    grid[subject][day_date].append(str(mark))
 
     averages = {}
 
@@ -274,23 +314,39 @@ def build_report(days):
     }
 
 
-async def load_sgo_diary(login, password, start, end):
+# ---------- SGO API ----------
+
+async def sgo_diary(login, password, start, end):
     if NetSchoolAPI is None:
-        raise RuntimeError("netschoolapi не установлен")
+        raise RuntimeError(f"netschoolapi не импортировался: {NETSCHOOL_IMPORT_ERROR}")
 
-    async with NetSchoolAPI(NETSCHOOL_URL) as ns:
-        await ns.login(login, password, NETSCHOOL_SCHOOL)
-        return await ns.diary(start=start, end=end)
+    ns = NetSchoolAPI(NETSCHOOL_URL, default_requests_timeout=30)
+    try:
+        await ns.login(login, password, NETSCHOOL_SCHOOL, requests_timeout=30)
+        return await ns.diary(start=start, end=end, requests_timeout=30)
+    finally:
+        try:
+            await ns.logout()
+        except Exception:
+            pass
 
 
-async def load_sgo_announcements(login, password):
+async def sgo_announcements(login, password):
     if NetSchoolAPI is None:
-        raise RuntimeError("netschoolapi не установлен")
+        raise RuntimeError(f"netschoolapi не импортировался: {NETSCHOOL_IMPORT_ERROR}")
 
-    async with NetSchoolAPI(NETSCHOOL_URL) as ns:
-        await ns.login(login, password, NETSCHOOL_SCHOOL)
-        return await ns.announcements(take=50)
+    ns = NetSchoolAPI(NETSCHOOL_URL, default_requests_timeout=30)
+    try:
+        await ns.login(login, password, NETSCHOOL_SCHOOL, requests_timeout=30)
+        return await ns.announcements(requests_timeout=30)
+    finally:
+        try:
+            await ns.logout()
+        except Exception:
+            pass
 
+
+# ---------- routes ----------
 
 @app.route("/", methods=["GET"])
 def index():
@@ -299,16 +355,24 @@ def index():
         "message": "Backend работает",
         "netschool_url": NETSCHOOL_URL,
         "netschool_school": NETSCHOOL_SCHOOL,
+        "netschool_imported": NetSchoolAPI is not None,
+        "netschool_import_error": NETSCHOOL_IMPORT_ERROR,
     })
 
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    return jsonify({"success": True, "status": "ok"})
+    return jsonify({
+        "success": True,
+        "status": "ok",
+        "netschool_url": NETSCHOOL_URL,
+        "netschool_school": NETSCHOOL_SCHOOL,
+        "netschool_imported": NetSchoolAPI is not None,
+    })
 
 
 @app.route("/api/login", methods=["POST"])
-def login():
+def login_route():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
@@ -329,10 +393,10 @@ def login():
 
 
 @app.route("/api/register", methods=["POST"])
-def register():
+def register_route():
     data = request.get_json(silent=True) or {}
-
     login_value = (data.get("login") or "").strip()
+
     if not login_value:
         return jsonify({"success": False, "error": "Введите логин"}), 400
 
@@ -350,7 +414,7 @@ def register():
 
 
 @app.route("/api/user_info", methods=["GET"])
-def user_info():
+def user_info_route():
     login_value = (request.args.get("login") or "").strip()
 
     if not login_value:
@@ -367,7 +431,7 @@ def user_info():
 
 
 @app.route("/api/users", methods=["GET"])
-def users():
+def users_route():
     conn = db()
     rows = conn.execute("SELECT * FROM users ORDER BY id DESC").fetchall()
     conn.close()
@@ -376,7 +440,7 @@ def users():
 
 
 @app.route("/api/diary", methods=["POST"])
-def diary():
+def diary_route():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
@@ -391,18 +455,17 @@ def diary():
         start = parse_date(start_text) if start_text else date.today() - timedelta(days=date.today().weekday())
         end = parse_date(end_text) if end_text else start + timedelta(days=6)
 
-        diary_data = run_async(load_sgo_diary(login_value, password, start, end))
-        return jsonify({"success": True, "data": diary_to_frontend(diary_data)})
-    except Exception as error:
+        diary_obj = run_async(sgo_diary(login_value, password, start, end))
         return jsonify({
-            "success": False,
-            "error": "Не удалось загрузить дневник из СГО",
-            "details": str(error),
-        }), 500
+            "success": True,
+            "data": diary_to_frontend(diary_obj),
+        })
+    except Exception as exc:
+        return error_response("Не удалось загрузить дневник из СГО", exc)
 
 
 @app.route("/api/report", methods=["POST"])
-def report():
+def report_route():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
@@ -424,21 +487,20 @@ def report():
 
         while cursor <= end:
             chunk_end = min(cursor + timedelta(days=6), end)
-            diary_data = run_async(load_sgo_diary(login_value, password, cursor, chunk_end))
-            all_days.extend(diary_to_frontend(diary_data))
+            diary_obj = run_async(sgo_diary(login_value, password, cursor, chunk_end))
+            all_days.extend(diary_to_frontend(diary_obj))
             cursor = chunk_end + timedelta(days=1)
 
-        return jsonify({"success": True, "data": build_report(all_days)})
-    except Exception as error:
         return jsonify({
-            "success": False,
-            "error": "Не удалось загрузить успеваемость из СГО",
-            "details": str(error),
-        }), 500
+            "success": True,
+            "data": build_report(all_days),
+        })
+    except Exception as exc:
+        return error_response("Не удалось загрузить успеваемость из СГО", exc)
 
 
 @app.route("/api/announcements", methods=["POST"])
-def announcements():
+def announcements_route():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
@@ -448,29 +510,24 @@ def announcements():
         return jsonify({"success": False, "error": "Не переданы логин или пароль СГО"}), 400
 
     try:
-        items = run_async(load_sgo_announcements(login_value, password))
+        items = run_async(sgo_announcements(login_value, password))
         result = []
 
         for item in items:
-            author = safe_attr(item, "author", None)
             result.append({
                 "title": safe_attr(item, "name", "Объявление"),
                 "content": safe_attr(item, "content", ""),
-                "date": str(safe_attr(item, "post_date", "")),
-                "author": safe_attr(author, "full_name", "Администрация") if author else "Администрация",
+                "date": to_iso(safe_attr(item, "post_date", "")),
+                "author": "Администрация",
             })
 
         return jsonify({"success": True, "data": result})
-    except Exception as error:
-        return jsonify({
-            "success": False,
-            "error": "Не удалось загрузить объявления из СГО",
-            "details": str(error),
-        }), 500
+    except Exception as exc:
+        return error_response("Не удалось загрузить объявления из СГО", exc)
 
 
 @app.route("/api/messages", methods=["GET"])
-def messages():
+def messages_route():
     login_value = (request.args.get("login") or "").strip()
 
     if not login_value:
@@ -489,7 +546,7 @@ def messages():
 
 
 @app.route("/api/send", methods=["POST"])
-def send():
+def send_route():
     data = request.get_json(silent=True) or {}
 
     sender = (data.get("sender") or "").strip()
@@ -531,7 +588,7 @@ def send():
 
 
 @app.route("/api/mark_read", methods=["POST"])
-def mark_read():
+def mark_read_route():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
