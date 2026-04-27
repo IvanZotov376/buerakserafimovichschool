@@ -4,3 +4,4 @@ gunicorn
 netschoolapi
 nest_asyncio
 requests
+aiohttp
