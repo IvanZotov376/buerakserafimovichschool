@@ -1,14 +1,16 @@
 import os
-import asyncio
 import sqlite3
+import asyncio
 from datetime import datetime, date, timedelta
 from pathlib import Path
-from typing import Any, Dict, List
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from netschoolapi import NetSchoolAPI
+try:
+    from netschoolapi import NetSchoolAPI
+except Exception:
+    NetSchoolAPI = None
 
 
 app = Flask(__name__)
@@ -17,7 +19,7 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "users.db"
 
-NETSCHOOL_URL = os.environ.get("NETSCHOOL_URL", "https://sgo.volganet.ru").rstrip("/")
+NETSCHOOL_URL = os.environ.get("NETSCHOOL_URL", "https://sgo.volganet.ru")
 NETSCHOOL_SCHOOL = os.environ.get("NETSCHOOL_SCHOOL", "Буракская СШ")
 
 
@@ -31,12 +33,12 @@ def db():
     return conn
 
 
-def now_iso():
-    return datetime.utcnow().isoformat(timespec="seconds")
-
-
 def has_col(conn, table, col):
     return any(row["name"] == col for row in conn.execute(f"PRAGMA table_info({table})"))
+
+
+def now_iso():
+    return datetime.utcnow().isoformat(timespec="seconds")
 
 
 def init_db():
@@ -57,14 +59,16 @@ def init_db():
         )
     """)
 
-    for col, sql in [
-        ("email", "ALTER TABLE users ADD COLUMN email TEXT DEFAULT ''"),
-        ("password", "ALTER TABLE users ADD COLUMN password TEXT DEFAULT ''"),
-        ("role", "ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'Ученик'"),
-        ("full_name", "ALTER TABLE users ADD COLUMN full_name TEXT"),
-        ("avatar_color", "ALTER TABLE users ADD COLUMN avatar_color TEXT DEFAULT ''"),
-        ("profile_photo", "ALTER TABLE users ADD COLUMN profile_photo TEXT DEFAULT ''"),
-    ]:
+    columns = {
+        "email": "ALTER TABLE users ADD COLUMN email TEXT DEFAULT ''",
+        "password": "ALTER TABLE users ADD COLUMN password TEXT DEFAULT ''",
+        "role": "ALTER TABLE users ADD COLUMN role TEXT DEFAULT 'Ученик'",
+        "full_name": "ALTER TABLE users ADD COLUMN full_name TEXT",
+        "avatar_color": "ALTER TABLE users ADD COLUMN avatar_color TEXT DEFAULT ''",
+        "profile_photo": "ALTER TABLE users ADD COLUMN profile_photo TEXT DEFAULT ''",
+    }
+
+    for col, sql in columns.items():
         if not has_col(conn, "users", col):
             conn.execute(sql)
 
@@ -108,16 +112,16 @@ def message_json(row):
     }
 
 
-def ensure_local_user(login_value, password="", email="", role="Ученик", full_name="", avatar_color="", profile_photo=""):
-    login_value = (login_value or "").strip()
-    if not login_value:
+def ensure_user(login, password="", email="", role="Ученик", full_name="", avatar_color="", profile_photo=""):
+    login = (login or "").strip()
+    if not login:
         return None
 
     conn = db()
-    user = conn.execute("SELECT * FROM users WHERE login = ?", (login_value,)).fetchone()
+    current = conn.execute("SELECT * FROM users WHERE login = ?", (login,)).fetchone()
     now = now_iso()
 
-    if user:
+    if current:
         conn.execute("""
             UPDATE users
             SET email = COALESCE(NULLIF(?, ''), email),
@@ -128,17 +132,17 @@ def ensure_local_user(login_value, password="", email="", role="Ученик", f
                 profile_photo = COALESCE(NULLIF(?, ''), profile_photo),
                 updated_at = ?
             WHERE login = ?
-        """, (email, password, role, full_name, avatar_color, profile_photo, now, login_value))
+        """, (email, password, role, full_name, avatar_color, profile_photo, now, login))
     else:
         conn.execute("""
             INSERT INTO users (login, email, password, role, full_name, avatar_color, profile_photo, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            login_value,
+            login,
             email or "",
             password or "",
             role or "Ученик",
-            full_name or login_value,
+            full_name or login,
             avatar_color or "",
             profile_photo or "",
             now,
@@ -146,113 +150,121 @@ def ensure_local_user(login_value, password="", email="", role="Ученик", f
         ))
 
     conn.commit()
-    user = conn.execute("SELECT * FROM users WHERE login = ?", (login_value,)).fetchone()
+    user = conn.execute("SELECT * FROM users WHERE login = ?", (login,)).fetchone()
     conn.close()
     return user
 
 
-def parse_date(value: str) -> date:
+def parse_date(value):
     return datetime.strptime(value, "%Y-%m-%d").date()
 
 
-def dt_to_str(value):
-    if value is None:
-        return ""
+def safe_attr(obj, name, default=""):
+    return getattr(obj, name, default) or default
+
+
+def to_front_date(value):
     if hasattr(value, "isoformat"):
         return value.isoformat()
     return str(value)
 
 
-def lesson_hw(assignments) -> List[str]:
+def format_mark(value):
+    if value is None:
+        return ""
+    return str(value)
+
+
+def diary_to_frontend(diary):
     result = []
-    for a in assignments or []:
-        content = getattr(a, "content", "") or ""
-        if content:
-            result.append(content)
-    return result
+    schedule = getattr(diary, "schedule", []) or []
 
+    for day in schedule:
+        day_date = safe_attr(day, "day", date.today())
+        lessons_result = []
 
-def assignment_to_detail(a, subject: str, lesson_day: date) -> Dict[str, Any]:
-    mark = getattr(a, "mark", None)
-    return {
-        "value": "" if mark is None else str(mark),
-        "subject": subject,
-        "date": lesson_day.strftime("%d.%m.%Y"),
-        "type": getattr(a, "type", "") or "Не указано",
-        "assignmentName": getattr(a, "content", "") or "",
-        "theme": getattr(a, "content", "") or "",
-        "teacher": "",
-        "comment": getattr(a, "comment", "") or "",
-        "deadline": dt_to_str(getattr(a, "deadline", "")),
-        "id": getattr(a, "id", ""),
-    }
-
-
-def diary_to_frontend(diary) -> List[Dict[str, Any]]:
-    days = []
-    for day in getattr(diary, "schedule", []) or []:
-        day_date = getattr(day, "day", None)
-        lessons = []
         for lesson in getattr(day, "lessons", []) or []:
-            subject = getattr(lesson, "subject", "") or "Предмет"
+            subject = safe_attr(lesson, "subject", "Предмет")
             assignments = getattr(lesson, "assignments", []) or []
-            details = []
+
+            homework = []
             marks = []
-            for a in assignments:
-                mark = getattr(a, "mark", None)
+            details = []
+
+            for assignment in assignments:
+                content = safe_attr(assignment, "content", "")
+                mark = getattr(assignment, "mark", None)
+
+                if content:
+                    homework.append(content)
+
                 if mark is not None:
-                    marks.append(str(mark))
-                    details.append(assignment_to_detail(a, subject, day_date))
-            lessons.append({
-                "number": getattr(lesson, "number", ""),
+                    mark_value = format_mark(mark)
+                    marks.append(mark_value)
+                    details.append({
+                        "value": mark_value,
+                        "subject": subject,
+                        "date": day_date.strftime("%d.%m.%Y") if hasattr(day_date, "strftime") else str(day_date),
+                        "type": safe_attr(assignment, "type", "Не указано"),
+                        "assignmentName": content,
+                        "theme": content,
+                        "teacher": "",
+                        "comment": safe_attr(assignment, "comment", ""),
+                        "id": safe_attr(assignment, "id", ""),
+                    })
+
+            lessons_result.append({
+                "number": safe_attr(lesson, "number", ""),
                 "subject": subject,
                 "teacher": "",
                 "theme": "",
-                "room": getattr(lesson, "room", "") or "",
-                "start": dt_to_str(getattr(lesson, "start", "")),
-                "end": dt_to_str(getattr(lesson, "end", "")),
-                "hw": lesson_hw(assignments),
-                "homework": lesson_hw(assignments),
+                "room": safe_attr(lesson, "room", ""),
+                "hw": homework,
+                "homework": homework,
                 "marks": marks,
                 "details": details,
             })
-        days.append({
-            "date": day_date.isoformat() if hasattr(day_date, "isoformat") else str(day_date),
-            "lessons": lessons,
+
+        result.append({
+            "date": to_front_date(day_date),
+            "lessons": lessons_result,
         })
-    return days
+
+    return result
 
 
-def build_report(days: List[Dict[str, Any]]) -> Dict[str, Any]:
+def build_report(days):
     subjects = []
     dates = []
-    grid: Dict[str, Dict[str, List[str]]] = {}
+    grid = {}
 
     for day in days:
-        d = day["date"]
-        if d not in dates:
-            dates.append(d)
+        day_date = day.get("date")
+        if day_date not in dates:
+            dates.append(day_date)
 
         for lesson in day.get("lessons", []):
-            subj = lesson.get("subject") or "Предмет"
-            if subj not in subjects:
-                subjects.append(subj)
+            subject = lesson.get("subject") or "Предмет"
+            if subject not in subjects:
+                subjects.append(subject)
 
-            grid.setdefault(subj, {}).setdefault(d, [])
+            grid.setdefault(subject, {}).setdefault(day_date, [])
             for mark in lesson.get("marks", []):
-                if mark not in ("", None):
-                    grid[subj][d].append(str(mark))
+                if mark:
+                    grid[subject][day_date].append(mark)
 
     averages = {}
-    for subj in subjects:
-        vals = []
-        for d in dates:
-            for m in grid.get(subj, {}).get(d, []):
+
+    for subject in subjects:
+        values = []
+        for day_date in dates:
+            for mark in grid.get(subject, {}).get(day_date, []):
                 try:
-                    vals.append(float(str(m).replace(",", ".")))
+                    values.append(float(str(mark).replace(",", ".")))
                 except ValueError:
                     pass
-        averages[subj] = round(sum(vals) / len(vals), 2) if vals else 0
+
+        averages[subject] = round(sum(values) / len(values), 2) if values else 0
 
     return {
         "subjects": subjects,
@@ -262,19 +274,25 @@ def build_report(days: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
-async def fetch_sgo_diary(login_value: str, password: str, start: date, end: date):
-    async with NetSchoolAPI(NETSCHOOL_URL, default_requests_timeout=25) as ns:
-        await ns.login(login_value, password, NETSCHOOL_SCHOOL, requests_timeout=25)
-        return await ns.diary(start=start, end=end, requests_timeout=25)
+async def load_sgo_diary(login, password, start, end):
+    if NetSchoolAPI is None:
+        raise RuntimeError("netschoolapi не установлен")
+
+    async with NetSchoolAPI(NETSCHOOL_URL) as ns:
+        await ns.login(login, password, NETSCHOOL_SCHOOL)
+        return await ns.diary(start=start, end=end)
 
 
-async def fetch_sgo_announcements(login_value: str, password: str):
-    async with NetSchoolAPI(NETSCHOOL_URL, default_requests_timeout=25) as ns:
-        await ns.login(login_value, password, NETSCHOOL_SCHOOL, requests_timeout=25)
-        return await ns.announcements(take=50, requests_timeout=25)
+async def load_sgo_announcements(login, password):
+    if NetSchoolAPI is None:
+        raise RuntimeError("netschoolapi не установлен")
+
+    async with NetSchoolAPI(NETSCHOOL_URL) as ns:
+        await ns.login(login, password, NETSCHOOL_SCHOOL)
+        return await ns.announcements(take=50)
 
 
-@app.get("/")
+@app.route("/", methods=["GET"])
 def index():
     return jsonify({
         "success": True,
@@ -284,12 +302,12 @@ def index():
     })
 
 
-@app.get("/api/health")
+@app.route("/api/health", methods=["GET"])
 def health():
     return jsonify({"success": True, "status": "ok"})
 
 
-@app.post("/api/login")
+@app.route("/api/login", methods=["POST"])
 def login():
     data = request.get_json(silent=True) or {}
 
@@ -306,29 +324,20 @@ def login():
     if not password:
         return jsonify({"success": False, "error": "Введите пароль"}), 400
 
-    # Проверяем, что данные СГО настоящие. Если СГО временно не отвечает, локальный вход всё равно сохраняем.
-    try:
-        today = date.today()
-        monday = today - timedelta(days=today.weekday())
-        run_async(fetch_sgo_diary(login_value, password, monday, monday + timedelta(days=1)))
-    except Exception as e:
-        # Не блокируем вход в личный кабинет, но сервер позже вернёт ошибку СГО при загрузке дневника.
-        print("SGO login check warning:", repr(e))
-
-    user = ensure_local_user(login_value, password, email, role, full_name, avatar_color, profile_photo)
-    return jsonify({"success": True, "message": "Вход выполнен", "user": user_json(user)})
+    user = ensure_user(login_value, password, email, role, full_name, avatar_color, profile_photo)
+    return jsonify({"success": True, "user": user_json(user)})
 
 
-@app.post("/api/register")
+@app.route("/api/register", methods=["POST"])
 def register():
     data = request.get_json(silent=True) or {}
-    login_value = (data.get("login") or "").strip()
 
+    login_value = (data.get("login") or "").strip()
     if not login_value:
         return jsonify({"success": False, "error": "Введите логин"}), 400
 
-    user = ensure_local_user(
-        login_value=login_value,
+    user = ensure_user(
+        login=login_value,
         password=data.get("password") or "",
         email=(data.get("email") or "").strip(),
         role=(data.get("role") or "Ученик").strip(),
@@ -336,12 +345,14 @@ def register():
         avatar_color=data.get("avatar_color") or "",
         profile_photo=data.get("profile_photo") or "",
     )
+
     return jsonify({"success": True, "user": user_json(user)})
 
 
-@app.get("/api/user_info")
+@app.route("/api/user_info", methods=["GET"])
 def user_info():
     login_value = (request.args.get("login") or "").strip()
+
     if not login_value:
         return jsonify({"success": False, "error": "Не передан login"}), 400
 
@@ -355,76 +366,79 @@ def user_info():
     return jsonify({"success": True, "user": user_json(user)})
 
 
-@app.get("/api/users")
+@app.route("/api/users", methods=["GET"])
 def users():
     conn = db()
     rows = conn.execute("SELECT * FROM users ORDER BY id DESC").fetchall()
     conn.close()
+
     return jsonify({"success": True, "users": [user_json(row) for row in rows]})
 
 
-@app.post("/api/diary")
-def diary_endpoint():
+@app.route("/api/diary", methods=["POST"])
+def diary():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
     password = data.get("password") or ""
-    start_s = data.get("start")
-    end_s = data.get("end")
+    start_text = data.get("start")
+    end_text = data.get("end")
 
     if not login_value or not password:
         return jsonify({"success": False, "error": "Не переданы логин или пароль СГО"}), 400
 
     try:
-        start = parse_date(start_s) if start_s else date.today() - timedelta(days=date.today().weekday())
-        end = parse_date(end_s) if end_s else start + timedelta(days=6)
-        diary_data = run_async(fetch_sgo_diary(login_value, password, start, end))
+        start = parse_date(start_text) if start_text else date.today() - timedelta(days=date.today().weekday())
+        end = parse_date(end_text) if end_text else start + timedelta(days=6)
+
+        diary_data = run_async(load_sgo_diary(login_value, password, start, end))
         return jsonify({"success": True, "data": diary_to_frontend(diary_data)})
-    except Exception as e:
+    except Exception as error:
         return jsonify({
             "success": False,
             "error": "Не удалось загрузить дневник из СГО",
-            "details": str(e),
+            "details": str(error),
         }), 500
 
 
-@app.post("/api/report")
-def report_endpoint():
+@app.route("/api/report", methods=["POST"])
+def report():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
     password = data.get("password") or ""
-    start_s = data.get("start")
-    end_s = data.get("end")
+    start_text = data.get("start")
+    end_text = data.get("end")
 
     if not login_value or not password:
         return jsonify({"success": False, "error": "Не переданы логин или пароль СГО"}), 400
-    if not start_s or not end_s:
-        return jsonify({"success": False, "error": "Не переданы даты отчёта"}), 400
+    if not start_text or not end_text:
+        return jsonify({"success": False, "error": "Не переданы даты"}), 400
 
     try:
-        start = parse_date(start_s)
-        end = parse_date(end_s)
+        start = parse_date(start_text)
+        end = parse_date(end_text)
 
         all_days = []
         cursor = start
+
         while cursor <= end:
             chunk_end = min(cursor + timedelta(days=6), end)
-            diary_data = run_async(fetch_sgo_diary(login_value, password, cursor, chunk_end))
+            diary_data = run_async(load_sgo_diary(login_value, password, cursor, chunk_end))
             all_days.extend(diary_to_frontend(diary_data))
             cursor = chunk_end + timedelta(days=1)
 
         return jsonify({"success": True, "data": build_report(all_days)})
-    except Exception as e:
+    except Exception as error:
         return jsonify({
             "success": False,
             "error": "Не удалось загрузить успеваемость из СГО",
-            "details": str(e),
+            "details": str(error),
         }), 500
 
 
-@app.post("/api/announcements")
-def announcements_endpoint():
+@app.route("/api/announcements", methods=["POST"])
+def announcements():
     data = request.get_json(silent=True) or {}
 
     login_value = (data.get("login") or "").strip()
@@ -434,28 +448,31 @@ def announcements_endpoint():
         return jsonify({"success": False, "error": "Не переданы логин или пароль СГО"}), 400
 
     try:
-        announcements = run_async(fetch_sgo_announcements(login_value, password))
+        items = run_async(load_sgo_announcements(login_value, password))
         result = []
-        for ann in announcements:
-            author = getattr(ann, "author", None)
+
+        for item in items:
+            author = safe_attr(item, "author", None)
             result.append({
-                "title": getattr(ann, "name", "") or "Объявление",
-                "content": getattr(ann, "content", "") or "",
-                "date": dt_to_str(getattr(ann, "post_date", "")),
-                "author": getattr(author, "full_name", "") if author else "Администрация",
+                "title": safe_attr(item, "name", "Объявление"),
+                "content": safe_attr(item, "content", ""),
+                "date": str(safe_attr(item, "post_date", "")),
+                "author": safe_attr(author, "full_name", "Администрация") if author else "Администрация",
             })
+
         return jsonify({"success": True, "data": result})
-    except Exception as e:
+    except Exception as error:
         return jsonify({
             "success": False,
             "error": "Не удалось загрузить объявления из СГО",
-            "details": str(e),
+            "details": str(error),
         }), 500
 
 
-@app.get("/api/messages")
+@app.route("/api/messages", methods=["GET"])
 def messages():
     login_value = (request.args.get("login") or "").strip()
+
     if not login_value:
         return jsonify({"success": False, "error": "Не передан login"}), 400
 
@@ -471,7 +488,7 @@ def messages():
     return jsonify({"success": True, "data": [message_json(row) for row in rows]})
 
 
-@app.post("/api/send")
+@app.route("/api/send", methods=["POST"])
 def send():
     data = request.get_json(silent=True) or {}
 
@@ -484,8 +501,8 @@ def send():
     if sender == recipient:
         return jsonify({"success": False, "error": "Нельзя отправить сообщение самому себе"}), 400
 
-    ensure_local_user(
-        sender,
+    ensure_user(
+        login=sender,
         password=data.get("sender_password") or "",
         role=data.get("sender_role") or "Ученик",
         full_name=data.get("sender_full_name") or sender,
@@ -493,23 +510,27 @@ def send():
 
     conn = db()
     recipient_user = conn.execute("SELECT 1 FROM users WHERE login = ?", (recipient,)).fetchone()
+
     if not recipient_user:
         conn.close()
-        return jsonify({"success": False, "error": "Получатель не найден. Он должен хотя бы один раз войти на сайт."}), 404
+        return jsonify({
+            "success": False,
+            "error": "Получатель не найден. Он должен хотя бы один раз войти на сайт.",
+        }), 404
 
-    cur = conn.execute("""
+    cursor = conn.execute("""
         INSERT INTO messages (sender, recipient, text, timestamp, read)
         VALUES (?, ?, ?, ?, 0)
     """, (sender, recipient, text, now_iso()))
     conn.commit()
 
-    msg = conn.execute("SELECT * FROM messages WHERE id = ?", (cur.lastrowid,)).fetchone()
+    msg = conn.execute("SELECT * FROM messages WHERE id = ?", (cursor.lastrowid,)).fetchone()
     conn.close()
 
     return jsonify({"success": True, "message": message_json(msg)})
 
 
-@app.post("/api/mark_read")
+@app.route("/api/mark_read", methods=["POST"])
 def mark_read():
     data = request.get_json(silent=True) or {}
 
