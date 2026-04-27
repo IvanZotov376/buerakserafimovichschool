@@ -1,5 +1,6 @@
 Flask
 flask-cors
+gunicorn
 requests
 netschoolapi
 nest_asyncio
