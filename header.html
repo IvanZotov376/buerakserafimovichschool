@@ -11,11 +11,9 @@
             </p>
         </div>
         <div class="header-icons">
-            <!-- Кнопка доступности -->
             <i class="fa-solid fa-eye" id="accessibilityBtn" title="Настройки доступности"></i>
 
-            <!-- Блок авторизованного пользователя (аватар + имя + роль) -->
-            <div class="user-block" id="userBlock">
+            <div class="user-block" id="userBlock" style="display: none;">
                 <div class="user-avatar" id="userAvatar"></div>
                 <div class="user-info">
                     <div class="user-name" id="userName"></div>
@@ -23,33 +21,33 @@
                 </div>
             </div>
 
-            <!-- Кнопка входа (показывается только для неавторизованных) -->
-            <i class="fa-solid fa-user" id="loginBtn" style="display: none;"></i>
+            <!-- Надёжная кнопка входа: работает даже без JS, потому что это ссылка -->
+            <a class="login-link" id="loginBtn" href="login.html" title="Войти в профиль" aria-label="Войти в профиль" style="display: inline-flex; color: white; text-decoration: none; cursor: pointer;">
+                <i class="fa-solid fa-user"></i>
+            </a>
 
-            <!-- Кнопка выхода -->
-            <i class="fa-solid fa-right-from-bracket" id="logoutBtn" style="display: none;"></i>
+            <i class="fa-solid fa-right-from-bracket" id="logoutBtn" title="Выйти" style="display: none;"></i>
 
-            <!-- Панель доступности (всплывающая) -->
             <div class="accessibility-panel" id="accessibilityPanel">
-                <button class="close-panel" id="closeAccessibilityPanel">&times;</button>
+                <button class="close-panel" id="closeAccessibilityPanel" type="button">&times;</button>
                 <h4><i class="fa-solid fa-universal-access"></i> Специальные возможности</h4>
 
                 <div class="option-group">
                     <label>Цветовая тема</label>
                     <div class="option-buttons" data-group="theme">
-                        <button class="option-btn active" data-value="original">Оригинальная</button>
-                        <button class="option-btn" data-value="dark">Тёмная</button>
-                        <button class="option-btn" data-value="blue">Синяя</button>
+                        <button class="option-btn active" data-value="original" type="button">Оригинальная</button>
+                        <button class="option-btn" data-value="dark" type="button">Тёмная</button>
+                        <button class="option-btn" data-value="blue" type="button">Синяя</button>
                     </div>
                 </div>
 
                 <div class="option-group">
                     <label>Размер шрифта</label>
                     <div class="option-buttons" data-group="fontSize">
-                        <button class="option-btn active" data-value="1">1x</button>
-                        <button class="option-btn" data-value="2">2x</button>
-                        <button class="option-btn" data-value="3">3x</button>
-                        <button class="option-btn" data-value="4">4x</button>
+                        <button class="option-btn active" data-value="1" type="button">1x</button>
+                        <button class="option-btn" data-value="2" type="button">2x</button>
+                        <button class="option-btn" data-value="3" type="button">3x</button>
+                        <button class="option-btn" data-value="4" type="button">4x</button>
                     </div>
                 </div>
 
@@ -64,9 +62,9 @@
                 <div class="option-group">
                     <label>Изображения</label>
                     <div class="option-buttons" data-group="imageMode">
-                        <button class="option-btn active" data-value="original">Оригинал</button>
-                        <button class="option-btn" data-value="grayscale">Чёрно-белые</button>
-                        <button class="option-btn" data-value="hide">Отключить</button>
+                        <button class="option-btn active" data-value="original" type="button">Оригинал</button>
+                        <button class="option-btn" data-value="grayscale" type="button">Чёрно-белые</button>
+                        <button class="option-btn" data-value="hide" type="button">Отключить</button>
                     </div>
                 </div>
             </div>
