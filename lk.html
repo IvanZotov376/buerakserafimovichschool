@@ -2599,7 +2599,7 @@ body.dark-theme .avg-score-green { background: rgba(81, 207, 102, 0.22); color: 
                 if (userRoleSpan) userRoleSpan.textContent = savedRole;
             } else {
                 if (userBlock) userBlock.style.display = 'none';
-                if (loginBtn) loginBtn.style.display = 'inline-block';
+                if (loginBtn) loginBtn.style.display = 'inline-flex';
                 if (logoutBtn) logoutBtn.style.display = 'none';
             }
         }
@@ -2608,18 +2608,14 @@ body.dark-theme .avg-score-green { background: rgba(81, 207, 102, 0.22); color: 
         if (userBlock) {
             userBlock.onclick = () => { if (isAuth && savedLogin) window.location.href = 'lk.html'; };
         }
-        if (loginBtn) loginBtn.onclick = () => { window.location.href = 'login.html'; };
+        if (loginBtn) { loginBtn.setAttribute('href', 'login.html'); loginBtn.onclick = (e) => { e.preventDefault(); window.location.assign('login.html'); }; }
         if (logoutBtn) {
             logoutBtn.onclick = () => {
                 if (confirm('Вы уверены, что хотите выйти?')) {
                     localStorage.removeItem('auth');
-                    localStorage.removeItem('login');
                     localStorage.removeItem('password');
-                    localStorage.removeItem('role');
-                    localStorage.removeItem('full_name');
-                    localStorage.removeItem('avatar_color');
                     localStorage.removeItem('profile_photo');
-                    location.reload();
+                    window.location.assign('login.html');
                 }
             };
         }
@@ -2827,7 +2823,7 @@ function initLK() {
     }
 
     document.getElementById('logoutBtn').onclick = () => {
-        if(confirm('Выйти из аккаунта?')){ localStorage.clear(); location.href = "login.html"; }
+        if(confirm('Выйти из аккаунта?')){ localStorage.removeItem('auth'); localStorage.removeItem('password'); localStorage.removeItem('profile_photo'); window.location.assign('login.html'); }
     };
 
     async function loadCurrentUserInfo() {
