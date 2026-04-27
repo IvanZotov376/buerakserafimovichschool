@@ -1,0 +1,16 @@
+В lk.html должен быть правильный адрес Render:
+
+const API_URL = "https://buerakserafimovichschool.onrender.com";
+
+Не должно быть:
+:5000
+localhost
+window.location.hostname
+
+Ваш текущий lk.html уже вызывает нужные endpoints:
+/api/diary
+/api/report
+/api/announcements
+/api/messages
+/api/send
+/api/mark_read

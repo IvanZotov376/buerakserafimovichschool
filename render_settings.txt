@@ -1,0 +1,13 @@
+Render Environment Variables:
+NETSCHOOL_URL=https://sgo.volganet.ru
+NETSCHOOL_SCHOOL=Буракская СШ
+
+Render Settings:
+Build Command:
+pip install -r requirements.txt
+
+Start Command:
+gunicorn server:app
+
+После загрузки файлов в GitHub:
+Manual Deploy -> Clear build cache & deploy
