@@ -180,3 +180,68 @@
     display: flex;
     gap: 8px;
 }
+/* ===== FIX: LOGIN LINK AND AVATAR ===== */
+
+.login-link {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.login-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+.login-link i {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.user-block {
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.user-block:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.header-icons > i,
+.header-icons > a {
+    color: white;
+}
