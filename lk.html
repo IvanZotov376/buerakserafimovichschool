@@ -2631,15 +2631,7 @@ function initLK() {
     // Адрес Flask-сервера.
     // Если страница открыта через http(s), берём тот же хост и порт 5000.
     // Если открыта как обычный file:// файл, используем локальный сервер.
-    const API_URL = (() => {
-        const saved = localStorage.getItem('api_url');
-        if (saved) return saved.replace(/\/$/, '');
-        if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
-            const host = window.location.hostname || '127.0.0.1';
-            return `${window.location.protocol}//${host}:5000`;
-        }
-        return 'http://127.0.0.1:5000';
-    })();
+    const API_URL = "https://buerakserafimovichschool.onrender.com";
 
     async function apiFetch(path, options = {}) {
         const url = path.startsWith('http') ? path : `${API_URL}${path}`;
@@ -3036,7 +3028,7 @@ function initLK() {
     window.sendNewMessage = async function() {
         const recipient = document.getElementById("recipientLogin").value.trim(); const text = document.getElementById("newMessageText").value.trim();
         if (!recipient || !text) { alert("Введите логин и текст"); return; }
-        try { const response = await apiFetch(`/api/send`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sender: savedLogin, recipient: recipient, text: text }) }); const data = await response.json(); if (data.success) { localStorage.setItem('lk_active_tab', 'messages'); setActiveTab('messages', false); closeNewMsgModal(); currentPartner = recipient; document.getElementById("inputArea").style.display = "flex"; document.getElementById("noDialog").style.display = "none"; document.getElementById("chatHeader").style.display = "flex"; await loadPartnerInfo(recipient); await loadMessages(); setActiveTab('messages', false); } else alert("Ошибка отправки"); } catch (err) { alert("Не удалось отправить"); }
+        try { const response = await apiFetch(`/api/send`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sender: savedLogin, recipient: recipient, text: text }) }); const data = await response.json(); if (data.success) { localStorage.setItem('lk_active_tab', 'messages'); setActiveTab('messages', false); closeNewMsgModal(); currentPartner = recipient; document.getElementById("inputArea").style.display = "flex"; document.getElementById("noDialog").style.display = "none"; document.getElementById("chatHeader").style.display = "flex"; await loadPartnerInfo(recipient); await loadMessages(); setActiveTab('messages', false); } else alert(data.error || "Ошибка отправки"); } catch (err) { alert("Не удалось отправить"); }
     };
     let messagesInitialized = false;
     function initMessagesTab() { if (!messagesInitialized) { loadCurrentUserInfo().then(() => loadMessages()); messagesInitialized = true; } else { loadMessages(); } if (window.messagesInterval) clearInterval(window.messagesInterval); window.messagesInterval = setInterval(() => { const activeTab = document.querySelector('.tab-content.active'); if (activeTab && activeTab.id === 'tab-messages') loadMessages(); }, 5000); }
