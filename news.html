@@ -476,7 +476,32 @@
             .user-avatar { width: 36px; height: 36px; font-size: 1rem; }
         }
 
-    </style>
+    
+        /* ----- HERO-БЛОК ТИТУЛА С АНИМИРОВАННЫМИ КРУГАМИ ----- */
+        .title-hero { width: 100%; position: relative; overflow: hidden; border-radius: 28px; padding: 38px 42px; margin-bottom: 32px; color: #ffffff; background: linear-gradient(135deg, #2ea3d0 0%, #3a5fa0 72%); box-shadow: 0 18px 40px rgba(46, 93, 160, 0.22); text-align: left; }
+        .title-hero h1 { color: #ffffff; font-size: 2.35rem; font-weight: 800; line-height: 1.15; margin: 0 0 8px; text-align: center; position: relative; z-index: 2; }
+        .title-hero p { color: #ffffff; font-weight: 700; opacity: 0.92; max-width: 680px; line-height: 1.5; margin: 0; position: relative; z-index: 2; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.18); font-weight: 800; font-size: 0.92rem; margin-bottom: 14px; position: relative; z-index: 2; }
+        .hero-circle { position: absolute; width: var(--size); height: var(--size); top: var(--top); left: var(--left); border-radius: 50%; background: rgba(255, 255, 255, var(--opacity)); pointer-events: none; z-index: 0; filter: blur(var(--blur)); animation-name: var(--move); animation-duration: var(--duration); animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-direction: alternate; animation-delay: var(--delay); will-change: transform; }
+        .hero-circle:nth-child(1) { --size: 230px; --top: -82px; --left: 78%; --opacity: 0.16; --blur: 0px; --duration: 44s; --delay: -12s; --move: floatChaosOne; }
+        .hero-circle:nth-child(2) { --size: 118px; --top: 18px; --left: 6%; --opacity: 0.14; --blur: 0.3px; --duration: 36s; --delay: -7s; --move: floatChaosTwo; }
+        .hero-circle:nth-child(3) { --size: 72px; --top: 64%; --left: 19%; --opacity: 0.22; --blur: 0px; --duration: 31s; --delay: -16s; --move: floatChaosThree; }
+        .hero-circle:nth-child(4) { --size: 154px; --top: 48%; --left: 58%; --opacity: 0.10; --blur: 0.5px; --duration: 52s; --delay: -21s; --move: floatChaosFour; }
+        .hero-circle:nth-child(5) { --size: 48px; --top: 19%; --left: 44%; --opacity: 0.26; --blur: 0px; --duration: 28s; --delay: -4s; --move: floatChaosFive; }
+        .hero-circle:nth-child(6) { --size: 96px; --top: 74%; --left: 84%; --opacity: 0.13; --blur: 0.4px; --duration: 40s; --delay: -25s; --move: floatChaosSix; }
+        .hero-circle:nth-child(7) { --size: 34px; --top: 38%; --left: 31%; --opacity: 0.30; --blur: 0px; --duration: 33s; --delay: -10s; --move: floatChaosSeven; }
+        @keyframes floatChaosOne { 0% { transform: translate(0, 0) scale(1); } 30% { transform: translate(-110px, 34px) scale(1.04); } 63% { transform: translate(-42px, 130px) scale(0.96); } 100% { transform: translate(-170px, 86px) scale(1.02); } }
+        @keyframes floatChaosTwo { 0% { transform: translate(0, 0) scale(1); } 28% { transform: translate(105px, 36px) scale(0.98); } 61% { transform: translate(44px, 92px) scale(1.06); } 100% { transform: translate(160px, -8px) scale(1); } }
+        @keyframes floatChaosThree { 0% { transform: translate(0, 0) scale(1); } 34% { transform: translate(64px, -58px) scale(1.08); } 67% { transform: translate(-38px, -96px) scale(0.94); } 100% { transform: translate(118px, -22px) scale(1.03); } }
+        @keyframes floatChaosFour { 0% { transform: translate(0, 0) scale(1); } 27% { transform: translate(-76px, -52px) scale(0.97); } 58% { transform: translate(84px, -104px) scale(1.05); } 100% { transform: translate(30px, 42px) scale(0.99); } }
+        @keyframes floatChaosFive { 0% { transform: translate(0, 0) scale(1); } 35% { transform: translate(92px, 38px) scale(1.1); } 70% { transform: translate(28px, 112px) scale(0.92); } 100% { transform: translate(-82px, 62px) scale(1.04); } }
+        @keyframes floatChaosSix { 0% { transform: translate(0, 0) scale(1); } 32% { transform: translate(-132px, -26px) scale(1.04); } 66% { transform: translate(-68px, -112px) scale(0.95); } 100% { transform: translate(-190px, -54px) scale(1.01); } }
+        @keyframes floatChaosSeven { 0% { transform: translate(0, 0) scale(1); } 25% { transform: translate(-48px, 64px) scale(1.12); } 55% { transform: translate(86px, 28px) scale(0.9); } 100% { transform: translate(24px, -72px) scale(1.05); } }
+        body.no-effects .hero-circle { animation: none; }
+        @media (max-width: 900px) { .title-hero { padding: 30px 24px; border-radius: 22px; } .title-hero h1 { font-size: 1.85rem; } }
+        @media (max-width: 768px) { .hero-circle:nth-child(1) { --size: 150px; } .hero-circle:nth-child(2) { --size: 88px; } .hero-circle:nth-child(3) { --size: 54px; } .hero-circle:nth-child(4) { --size: 104px; } .hero-circle:nth-child(5) { --size: 38px; } .hero-circle:nth-child(6) { --size: 72px; } .hero-circle:nth-child(7) { --size: 28px; } }
+
+</style>
 </head>
 
 <body>
@@ -485,7 +510,18 @@
 
 <main class="content">
     <div class="container">
-        <h1 class="page-title">Новости школы</h1>
+        <section class="title-hero">
+            <span class="hero-circle" aria-hidden="true"></span>
+            <span class="hero-circle" aria-hidden="true"></span>
+            <span class="hero-circle" aria-hidden="true"></span>
+            <span class="hero-circle" aria-hidden="true"></span>
+            <span class="hero-circle" aria-hidden="true"></span>
+            <span class="hero-circle" aria-hidden="true"></span>
+            <span class="hero-circle" aria-hidden="true"></span>
+            <div class="hero-badge"><i class="fa-solid fa-newspaper"></i> Школьные новости</div>
+            <h1>Новости школы</h1>
+            <p>Актуальные события, объявления и новости школьной жизни.</p>
+        </section>
         <div class="vk-block">
             <div id="vk_groups"></div>
         </div>
