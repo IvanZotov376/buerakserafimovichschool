@@ -929,6 +929,72 @@ body.blue-theme .warning-block {
             background: rgba(39, 174, 96, 0.1);
         }
 
+        #errorMsg {
+            display: none;
+            text-align: center;
+            color: #c0392b;
+            font-weight: 800;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(192, 57, 43, 0.1);
+        }
+
+        .captcha-row {
+            display: grid;
+            grid-template-columns: 1fr 120px;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .captcha-question {
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #eef7fc;
+            border: 1px solid #d8e5ee;
+            font-weight: 800;
+            color: #2c3e50;
+        }
+
+        .captcha-refresh {
+            border: 1px solid #d8e5ee;
+            border-radius: 14px;
+            padding: 14px 12px;
+            font-family: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            color: #2ea3d0;
+            background: #f8fbfd;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .captcha-refresh:hover {
+            background: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .spam-field {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .btn-send:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        body.dark-theme .captcha-question,
+        body.dark-theme .captcha-refresh {
+            background: #252525;
+            border-color: #333333;
+            color: #e8e8e8;
+        }
+
+
         body.dark-theme {
             background:
                 radial-gradient(circle at top left, rgba(79, 172, 254, 0.12), transparent 30rem),
@@ -1224,7 +1290,7 @@ body.blue-theme .warning-block {
                         <i class="fa-solid fa-map-location-dot"></i>
                         <div>
                             <strong>Наш адрес</strong>
-                            <span>403471, Волгоградская обл., х. Буерак-Поповский, ул. Школьная, 1</span>
+                            <span>403471, Волгоградская обл., х. Буерак-Поповский, ул. Антпипова, 1</span>
                         </div>
                     </div>
 
@@ -1232,7 +1298,9 @@ body.blue-theme .warning-block {
                         <i class="fa-solid fa-phone"></i>
                         <div>
                             <strong>Телефон</strong>
-                            <a href="tel:+78446433333">+7 (84464) 3-33-33</a>
+                            <a href="tel:+78446433333">
++7 (84464) 3-51-30 (приемная);
++7 (84464) 3-51-49 (общий)</a>
                         </div>
                     </div>
                 </div>
@@ -1243,19 +1311,22 @@ body.blue-theme .warning-block {
             <section class="contact-card">
                 <h2 class="card-title"><i class="fa-solid fa-paper-plane"></i> Обратная связь</h2>
 
-                <div class="feedback-form">
+                <form class="feedback-form" id="contactForm" novalidate>
                     <label for="nameInput">Ваше имя</label>
-                    <input type="text" id="nameInput" placeholder="Введите имя">
+                    <input type="text" id="nameInput" placeholder="Введите имя" autocomplete="name" required>
 
                     <label for="emailInput">Ваш Email</label>
-                    <input type="email" id="emailInput" placeholder="example@mail.ru">
+                    <input type="email" id="emailInput" placeholder="example@mail.ru" autocomplete="email" required>
 
                     <label for="messageInput">Сообщение</label>
-                    <textarea id="messageInput" placeholder="Напишите сообщение"></textarea>
+                    <textarea id="messageInput" placeholder="Напишите сообщение" required></textarea>
 
-                    <button class="btn-send" id="sendBtn">Отправить</button>
+                    <input class="spam-field" type="text" id="websiteInput" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+                    <button class="btn-send" id="sendBtn" type="submit">Отправить</button>
                     <p id="successMsg">Сообщение отправлено!</p>
-                </div>
+                    <p id="errorMsg"></p>
+                </form>
             </section>
         </div>
     </div>
@@ -1476,17 +1547,75 @@ body.blue-theme .warning-block {
         map.geoObjects.add(placemark);
     });
 
-    document.getElementById("sendBtn").addEventListener("click", function () {
-        const name = document.getElementById("nameInput").value.trim();
-        const successMsg = document.getElementById("successMsg");
+    const contactForm = document.getElementById("contactForm");
+    const sendBtn = document.getElementById("sendBtn");
+    const successMsg = document.getElementById("successMsg");
+    const errorMsg = document.getElementById("errorMsg");
 
-        if (name) {
-            successMsg.style.display = "block";
-            setTimeout(function () {
-                successMsg.style.display = "none";
-            }, 3000);
-        }
-    });
+    function showSuccess(text) {
+        errorMsg.style.display = "none";
+        successMsg.textContent = text;
+        successMsg.style.display = "block";
+        setTimeout(() => { successMsg.style.display = "none"; }, 4000);
+    }
+
+    function showError(text) {
+        successMsg.style.display = "none";
+        errorMsg.textContent = text;
+        errorMsg.style.display = "block";
+    }
+
+    if (contactForm) {
+        contactForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const payload = {
+                name: document.getElementById("nameInput").value.trim(),
+                email: document.getElementById("emailInput").value.trim(),
+                message: document.getElementById("messageInput").value.trim(),
+                website: document.getElementById("websiteInput").value.trim()
+            };
+
+            if (!payload.name || !payload.email || !payload.message) {
+                showError("Заполните имя, email и сообщение.");
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.textContent = "Отправка...";
+
+            try {
+                const response = await fetch("/api/send_contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const rawText = await response.text();
+                let data = null;
+
+                try {
+                    data = rawText ? JSON.parse(rawText) : null;
+                } catch (parseError) {
+                    throw new Error(
+                        "Сервер вернул не JSON-ответ. Проверьте, что запущен обновлённый server.py и маршрут /api/send_contact доступен."
+                    );
+                }
+
+                if (!response.ok || !data || !data.success) {
+                    throw new Error((data && data.error) || "Не удалось отправить сообщение");
+                }
+
+                contactForm.reset();
+                showSuccess("Сообщение отправлено!");
+            } catch (error) {
+                showError(error.message || "Ошибка отправки сообщения");
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = "Отправить";
+            }
+        });
+    }
 </script>
 
 </body>
