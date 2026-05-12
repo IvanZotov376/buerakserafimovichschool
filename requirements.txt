@@ -5,3 +5,5 @@ netschoolapi
 nest_asyncio
 requests
 aiohttp
+python-dotenv
+vk_api
