@@ -7,3 +7,4 @@ requests
 aiohttp
 python-dotenv
 vk_api
+typing_extensions==4.4.0
